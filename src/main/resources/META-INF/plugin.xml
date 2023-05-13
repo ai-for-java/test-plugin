@@ -22,7 +22,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
-<!--    <depends optional="false">JUnit</depends>-->
+    <!--    <depends optional="false">JUnit</depends>-->
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -34,14 +34,34 @@
     </extensions>
 
     <actions>
-        <action id="com.example.testplugin.DoMagicAction"
-                class="com.example.testplugin.DoMagicAction"
-                text="Generate Implementation and Tests"
-                description="Generate implementation and tests"
-                >
-<!--            <add-to-group group-id="MainMenu" anchor="last" />-->
-            <add-to-group group-id="ProjectViewPopupMenu"/>
+
+        <action id="VerifySpecAction"
+                class="com.example.testplugin.VerifySpecAction"
+                text="Verify Specification"
+                description="Verify specification"
+                icon="AllIcons.Actions.Preview">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
         </action>
+
+        <action id="GenerateTestsAction"
+                class="com.example.testplugin.GenerateTestsAction"
+                text="Generate Tests"
+                description="Generate tests"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="VerifySpecAction"/>
+        </action>
+
+        <action id="GenerateImplementation"
+                class="com.example.testplugin.GenerateImplementationAction"
+                text="Generate Implementation"
+                description="Generate implementation"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestsAction"/>
+        </action>
+
     </actions>
 
 </idea-plugin>

@@ -17,7 +17,7 @@ repositories {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     version.set("2022.1.4")
-    type.set("IC") // Target IDE Platform
+    type.set("IC") // TODO IU
 
     plugins.set(listOf(/* Plugin Dependencies */))
 }
@@ -46,7 +46,9 @@ tasks {
 
     dependencies {
         implementation("dev.ai4j:ai4j:0.2.1")
-//        runtimeOnly("com.jetbrains.intellij.java:java-psi-api:231.8770.65")
         implementation("ch.qos.logback:logback-classic:1.3.7")
+        implementation("org.projectlombok:lombok:1.18.20")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     }
 }
