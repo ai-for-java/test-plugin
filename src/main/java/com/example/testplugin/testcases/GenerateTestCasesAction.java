@@ -1,12 +1,12 @@
 package com.example.testplugin.testcases;
 
-import com.example.testplugin.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -14,9 +14,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import dev.ai4j.model.ModelResponseHandler;
 import dev.ai4j.model.openai.OpenAiModelName;
 import org.jetbrains.annotations.NotNull;
+
+import static com.example.testplugin.Utils.appendStringToTextFile;
+import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 
 public abstract class GenerateTestCasesAction extends AnAction {
 
@@ -49,14 +54,31 @@ public abstract class GenerateTestCasesAction extends AnAction {
 
                     String implClassName = specFile.getName().replace(".spec", "");
 
-                    String testCases = aiTestCaseGenerator.generateTestCases(spec, implClassName);
+                    ApplicationManager.getApplication().runReadAction(() -> {
+                        // needs read action
+                        PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
 
-                    ApplicationManager.getApplication().invokeLater(() -> {
-                        WriteCommandAction.runWriteCommandAction(project, () -> {
-                            PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            Utils.createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, "-", TXT, testCases, directory, project);
+                        ApplicationManager.getApplication().invokeLater(() -> {
+                            ApplicationManager.getApplication().runWriteAction(() -> {
+                                // needs write action
+                                PsiFile file = createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, "-", TXT, directory, project);
+                                VirtualFile virtualFile = file.getVirtualFile();
+                                FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
+
+                                aiTestCaseGenerator.generateTestCases(spec, implClassName, new ModelResponseHandler() {
+                                    @Override
+                                    public void handleResponseFragment(String responseFragment) {
+                                        WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                                            // needs write action
+                                            appendStringToTextFile(virtualFile, responseFragment);
+                                        });
+                                    }
+                                });
+                            });
                         });
                     });
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

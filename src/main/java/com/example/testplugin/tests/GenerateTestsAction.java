@@ -19,16 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TESTCASES;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TXT;
-import static java.util.stream.Collectors.toList;
 
 public class GenerateTestsAction extends AnAction {
 
-    public static final Pattern TEST_CASE_PATTERN = Pattern.compile("\\[\\[\\[(.*?)]]]", Pattern.DOTALL);
     private final AiTestGenerator aiTestGenerator = new AiTestGenerator(); // TODO memory leak
 
     @Override
@@ -83,12 +79,11 @@ public class GenerateTestsAction extends AnAction {
         return parentDir.findChild(targetFileName);
     }
 
-    private static List<String> parseTestCases(String text) {
-        List<String> extractedParts = new ArrayList<>();
-        Matcher matcher = TEST_CASE_PATTERN.matcher(text);
-        while (matcher.find()) {
-            extractedParts.add(matcher.group(1));
+    private static List<String> parseTestCases(String testCasesText) {
+        List<String> testCases = new ArrayList<>();
+        for (String testCase : testCasesText.split("\n\n")) {
+            testCases.add("Test case:\n" + testCase.trim());
         }
-        return extractedParts.stream().map(s -> "Test case:\n" + s.trim()).collect(toList());
+        return testCases;
     }
 }
