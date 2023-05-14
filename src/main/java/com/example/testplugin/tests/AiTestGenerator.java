@@ -1,5 +1,6 @@
 package com.example.testplugin.tests;
 
+import dev.ai4j.model.ModelResponseHandler;
 import dev.ai4j.model.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 import dev.ai4j.prompt.PromptTemplate;
@@ -41,5 +42,18 @@ public class AiTestGenerator {
         );
 
         return model.chat(messages).getContents();
+    }
+
+    public void generateTestClassContents(String spec, String testCases, String testClassName, ModelResponseHandler modelResponseHandler) {
+        List<ChatMessage> messages = List.of(
+                messageFromSystem("You are a professional software tester."),
+                messageFromHuman(CREATE_TEST_CLASS_PROMPT_TEMPLATE.apply(Map.of(
+                        "spec", spec,
+                        "test_cases", Matcher.quoteReplacement(testCases), // TODO move to ai4j?
+                        "test_class_name", testClassName
+                )).getPromptText())
+        );
+
+        model.chat(messages, modelResponseHandler);
     }
 }

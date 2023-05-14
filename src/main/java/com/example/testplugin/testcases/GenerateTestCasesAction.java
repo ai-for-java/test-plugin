@@ -61,7 +61,7 @@ public abstract class GenerateTestCasesAction extends AnAction {
                         ApplicationManager.getApplication().invokeLater(() -> {
                             ApplicationManager.getApplication().runWriteAction(() -> {
                                 // needs write action
-                                PsiFile file = createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, "-", TXT, directory, project);
+                                PsiFile file = createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, "", TXT, directory, project);
                                 VirtualFile virtualFile = file.getVirtualFile();
                                 FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
 

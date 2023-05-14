@@ -51,7 +51,7 @@ public abstract class AssessSpecAction extends AnAction {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
                             String baseFileName = specFile.getName() + ".assessment";
                             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            createFileAndShiftExistingFilesIfAny(baseFileName, "-", ".txt", specVerificationResult, directory, project);
+                            createFileAndShiftExistingFilesIfAny(baseFileName, "", ".txt", specVerificationResult, directory, project);
                         });
                     });
                 } catch (Exception ex) {

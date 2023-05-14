@@ -1,12 +1,12 @@
 package com.example.testplugin.tests;
 
-import com.example.testplugin.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -14,12 +14,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import dev.ai4j.model.ModelResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.testplugin.Utils.appendStringToTextFile;
+import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TESTCASES;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TXT;
 
@@ -54,16 +58,30 @@ public class GenerateTestsAction extends AnAction {
                     List<String> testCasesList = parseTestCases(testCasesFileContents);
                     String testCases = String.join("\n\n", testCasesList);
 
-                    String testClassContent = aiTestGenerator.generateTestClassContents(spec, testCases, testClassName)
-                            .replace("```java", "")
-                            .replace("```", "");
+                    ApplicationManager.getApplication().runReadAction(() -> {
+                        // needs read action
+                        PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
 
-                    ApplicationManager.getApplication().invokeLater(() -> {
-                        WriteCommandAction.runWriteCommandAction(project, () -> {
-                            PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            Utils.createFileAndShiftExistingFilesIfAny(testClassName, "", ".java", testClassContent, directory, project);
+                        ApplicationManager.getApplication().invokeLater(() -> {
+                            WriteCommandAction.runWriteCommandAction(project, () -> {
+                                PsiFile file = createFileAndShiftExistingFilesIfAny(testClassName, "", ".java", directory, project);
+                                VirtualFile virtualFile = file.getVirtualFile();
+                                FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
+
+                                aiTestGenerator.generateTestClassContents(spec, testCases, testClassName, new ModelResponseHandler() {
+                                    @Override
+                                    public void handleResponseFragment(String responseFragment) {
+                                        WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                                            // needs write action
+                                            appendStringToTextFile(virtualFile, responseFragment);
+                                        });
+                                    }
+                                });
+                            });
                         });
                     });
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
