@@ -53,7 +53,7 @@ public class GenerateImplementationAction extends AnAction {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
                             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            Utils.createFileAndShiftExistingFilesIfAny(implClassName, ".java", implClassContents, directory, project);
+                            Utils.createFileAndShiftExistingFilesIfAny(implClassName, "", ".java", implClassContents, directory, project);
                         });
                     });
 

@@ -14,13 +14,16 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import dev.ai4j.model.openai.OpenAiModelName;
 import org.jetbrains.annotations.NotNull;
 
 import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 
-public class AssessSpecAction extends AnAction {
+public abstract class AssessSpecAction extends AnAction {
 
-    private final AiSpecAssesser aiSpecAssesser = new AiSpecAssesser(); // TODO memory leak
+    private final AiSpecAssesser aiSpecAssesser = new AiSpecAssesser(getModelName()); // TODO memory leak
+
+    protected abstract OpenAiModelName getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -46,10 +49,9 @@ public class AssessSpecAction extends AnAction {
 
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
-
                             String baseFileName = specFile.getName() + ".assessment";
                             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            createFileAndShiftExistingFilesIfAny(baseFileName, ".txt", specVerificationResult, directory, project);
+                            createFileAndShiftExistingFilesIfAny(baseFileName, "-", ".txt", specVerificationResult, directory, project);
                         });
                     });
                 } catch (Exception ex) {

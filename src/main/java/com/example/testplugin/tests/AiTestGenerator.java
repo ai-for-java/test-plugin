@@ -7,6 +7,7 @@ import dev.ai4j.prompt.PromptTemplate;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
 import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
@@ -24,10 +25,7 @@ public class AiTestGenerator {
 
     private final OpenAiChatModel model = OpenAiChatModel.builder()
             .modelName(GPT_3_5_TURBO)
-            .apiKeys(List.of(
-                    System.getenv("OPENAI_API_KEY"),
-                    System.getenv("OPENAI_API_KEY_2")
-            ))
+            .apiKey(System.getenv("OPENAI_API_KEY"))
             .temperature(0.0)
             .timeout(Duration.ofMinutes(10))
             .build();
@@ -37,7 +35,7 @@ public class AiTestGenerator {
                 messageFromSystem("You are a professional software tester."),
                 messageFromHuman(CREATE_TEST_CLASS_PROMPT_TEMPLATE.apply(Map.of(
                         "spec", spec,
-                        "test_cases", testCases,
+                        "test_cases", Matcher.quoteReplacement(testCases), // TODO move to ai4j?
                         "test_class_name", testClassName
                 )).getPromptText())
         );

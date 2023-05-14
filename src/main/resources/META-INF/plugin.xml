@@ -35,8 +35,8 @@
 
     <actions>
 
-        <action id="AssessSpecAction"
-                class="com.example.testplugin.spec.AssessSpecAction"
+        <action id="AssessSpecWithGpt3Action"
+                class="com.example.testplugin.spec.AssessSpecWithGpt3Action"
                 text="Assess Specification"
                 description="Assess specification"
                 icon="AllIcons.Actions.Preview">
@@ -44,13 +44,31 @@
                           anchor="first"/>
         </action>
 
-        <action id="GenerateTestCasesAction"
-                class="com.example.testplugin.testcases.GenerateTestCasesAction"
+        <action id="AssessSpecWithGpt4Action"
+                class="com.example.testplugin.spec.AssessSpecWithGpt4Action"
+                text="Assess Specification (GPT-4)"
+                description="Assess specification (GPT-4)"
+                icon="AllIcons.Actions.Preview">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="AssessSpecWithGpt3Action"/>
+        </action>
+
+        <action id="GenerateTestCasesWithGpt3Action"
+                class="com.example.testplugin.testcases.GenerateTestCasesWithGpt3Action"
                 text="Generate Test Cases"
                 description="Generate test cases"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="AssessSpecAction"/>
+                          anchor="after" relative-to-action="AssessSpecWithGpt4Action"/>
+        </action>
+
+        <action id="GenerateTestCasesWithGpt4Action"
+                class="com.example.testplugin.testcases.GenerateTestCasesWithGpt4Action"
+                text="Generate Test Cases (GPT-4)"
+                description="Generate test cases (GPT-4)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestCasesWithGpt3Action"/>
         </action>
 
         <action id="GenerateTestsAction"
@@ -59,7 +77,7 @@
                 description="Generate tests"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="GenerateTestCasesAction"/>
+                          anchor="after" relative-to-action="GenerateTestCasesWithGpt4Action"/>
         </action>
 
         <action id="GenerateImplementation"

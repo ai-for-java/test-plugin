@@ -15,14 +15,17 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import dev.ai4j.model.openai.OpenAiModelName;
 import org.jetbrains.annotations.NotNull;
 
-public class GenerateTestCasesAction extends AnAction {
+public abstract class GenerateTestCasesAction extends AnAction {
 
     public static final String TESTCASES = ".testcases";
     public static final String TXT = ".txt";
 
-    private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(); // TODO memory leak
+    private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(getModelName()); // TODO memory leak
+
+    protected abstract OpenAiModelName getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -51,7 +54,7 @@ public class GenerateTestCasesAction extends AnAction {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
                             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            Utils.createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, TXT, testCases, directory, project);
+                            Utils.createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, "-", TXT, testCases, directory, project);
                         });
                     });
                 } catch (Exception ex) {

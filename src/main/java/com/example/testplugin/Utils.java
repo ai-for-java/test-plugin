@@ -8,6 +8,7 @@ import com.intellij.psi.PsiFileFactory;
 public class Utils {
 
     public static void createFileAndShiftExistingFilesIfAny(String baseFileName,
+                                                            String divider,
                                                             String fileExtension,
                                                             String fileContents,
                                                             PsiDirectory directory,
@@ -21,7 +22,7 @@ public class Utils {
             // Find the highest counter value for existing files
             do {
                 fileExists = false;
-                String fileName = baseFileName + (counter == 0 ? "" : "-" + counter) + fileExtension;
+                String fileName = baseFileName + (counter == 0 ? "" : divider + counter) + fileExtension;
                 PsiFile existingFile = directory.findFile(fileName);
 
                 if (existingFile != null) {
@@ -32,8 +33,8 @@ public class Utils {
 
             // Rename all existing files by incrementing their counter values
             for (int i = counter - 1; i >= 0; i--) {
-                String oldFileName = baseFileName + (i == 0 ? "" : "-" + i) + fileExtension;
-                String newFileName = baseFileName + "-" + (i + 1) + fileExtension;
+                String oldFileName = baseFileName + (i == 0 ? "" : divider + i) + fileExtension;
+                String newFileName = baseFileName + divider + (i + 1) + fileExtension;
                 PsiFile oldFile = directory.findFile(oldFileName);
 
                 if (oldFile != null) {

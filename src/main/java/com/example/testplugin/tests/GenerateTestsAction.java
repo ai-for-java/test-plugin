@@ -1,7 +1,6 @@
 package com.example.testplugin.tests;
 
 import com.example.testplugin.Utils;
-import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -15,16 +14,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TESTCASES;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TXT;
+import static java.util.stream.Collectors.toList;
 
 public class GenerateTestsAction extends AnAction {
 
+    public static final Pattern TEST_CASE_PATTERN = Pattern.compile("\\[\\[\\[(.*?)]]]", Pattern.DOTALL);
     private final AiTestGenerator aiTestGenerator = new AiTestGenerator(); // TODO memory leak
 
     @Override
@@ -50,7 +54,10 @@ public class GenerateTestsAction extends AnAction {
                     String implClassName = specFile.getName().replace(".spec", "");
                     String testClassName = implClassName + "Test";
 
-                    String testCases = VfsUtil.loadText(getTestCasesFileRelatedTo(specFile));
+                    String testCasesFileContents = VfsUtil.loadText(getTestCasesFileRelatedTo(specFile));
+                    List<String> testCasesList = parseTestCases(testCasesFileContents);
+                    String testCases = String.join("\n\n", testCasesList);
+
                     String testClassContent = aiTestGenerator.generateTestClassContents(spec, testCases, testClassName)
                             .replace("```java", "")
                             .replace("```", "");
@@ -58,7 +65,7 @@ public class GenerateTestsAction extends AnAction {
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
                             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            Utils.createFileAndShiftExistingFilesIfAny(testClassName, ".java", testClassContent, directory, project);
+                            Utils.createFileAndShiftExistingFilesIfAny(testClassName, "", ".java", testClassContent, directory, project);
                         });
                     });
                 } catch (Exception ex) {
@@ -74,5 +81,14 @@ public class GenerateTestsAction extends AnAction {
         VirtualFile parentDir = specFile.getParent();
         String targetFileName = specFile.getNameWithoutExtension() + TESTCASES + TXT;
         return parentDir.findChild(targetFileName);
+    }
+
+    private static List<String> parseTestCases(String text) {
+        List<String> extractedParts = new ArrayList<>();
+        Matcher matcher = TEST_CASE_PATTERN.matcher(text);
+        while (matcher.find()) {
+            extractedParts.add(matcher.group(1));
+        }
+        return extractedParts.stream().map(s -> "Test case:\n" + s.trim()).collect(toList());
     }
 }
