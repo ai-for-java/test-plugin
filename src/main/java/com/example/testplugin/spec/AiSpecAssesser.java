@@ -1,4 +1,4 @@
-package com.example.testplugin;
+package com.example.testplugin.spec;
 
 import dev.ai4j.model.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
@@ -10,16 +10,19 @@ import java.util.Map;
 
 import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
 import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
+import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 
-public class AiSpecVerifier {
+public class AiSpecAssesser {
 
     private static final PromptTemplate VERIFY_SPEC_PROMPT_TEMPLATE = PromptTemplate.from(
-            "Provide a list (ordered from most critical to least critical) of at least 10 issues (incomplete, contradictory and ambiguous requirements) in the following technical specification delimited by triple angle brackets (in the context of Java): <<<${spec}>>>");
+            "Provide a list (ordered from most critical to least critical) of issues such as incomplete, contradictory and ambiguous requirements in the following technical specification delimited by triple angle brackets: <<<${spec}>>>");
 
-    private final OpenAiChatModel specVerifierModel = OpenAiChatModel.builder()
-            .modelName(GPT_3_5_TURBO) // TODO try 4?
-            .apiKey(System.getenv("OPENAI_API_KEY"))
+    private final OpenAiChatModel model = OpenAiChatModel.builder()
+            .modelName(GPT_4) // TODO try 4?
+            .apiKeys(List.of(
+                    System.getenv("OPENAI_API_KEY"),
+                    System.getenv("OPENAI_API_KEY_2")
+            ))
             .temperature(0.0)
             .timeout(Duration.ofMinutes(10))
             .build();
@@ -32,7 +35,6 @@ public class AiSpecVerifier {
                 )).getPromptText())
         );
 
-        return specVerifierModel.chat(messages).getContents();
-
+        return model.chat(messages).getContents();
     }
 }

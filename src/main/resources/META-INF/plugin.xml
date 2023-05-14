@@ -35,26 +35,35 @@
 
     <actions>
 
-        <action id="VerifySpecAction"
-                class="com.example.testplugin.VerifySpecAction"
-                text="Verify Specification"
-                description="Verify specification"
+        <action id="AssessSpecAction"
+                class="com.example.testplugin.spec.AssessSpecAction"
+                text="Assess Specification"
+                description="Assess specification"
                 icon="AllIcons.Actions.Preview">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
         </action>
 
+        <action id="GenerateTestCasesAction"
+                class="com.example.testplugin.testcases.GenerateTestCasesAction"
+                text="Generate Test Cases"
+                description="Generate test cases"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="AssessSpecAction"/>
+        </action>
+
         <action id="GenerateTestsAction"
-                class="com.example.testplugin.GenerateTestsAction"
+                class="com.example.testplugin.tests.GenerateTestsAction"
                 text="Generate Tests"
                 description="Generate tests"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="VerifySpecAction"/>
+                          anchor="after" relative-to-action="GenerateTestCasesAction"/>
         </action>
 
         <action id="GenerateImplementation"
-                class="com.example.testplugin.GenerateImplementationAction"
+                class="com.example.testplugin.impl.GenerateImplementationAction"
                 text="Generate Implementation"
                 description="Generate implementation"
                 icon="AllIcons.Diff.MagicResolve">

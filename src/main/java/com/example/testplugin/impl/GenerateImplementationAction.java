@@ -1,6 +1,6 @@
-package com.example.testplugin;
+package com.example.testplugin.impl;
 
-import com.intellij.ide.actions.OpenFileAction;
+import com.example.testplugin.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -14,14 +14,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
 public class GenerateImplementationAction extends AnAction {
 
-    private final AiCoder aiCoder = new AiCoder(); // TODO memory leak
+    private final AiImplementationGenerator aiImplementationGenerator = new AiImplementationGenerator(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -48,21 +46,18 @@ public class GenerateImplementationAction extends AnAction {
                     String testClassContents = VfsUtil.loadText(testFile);
                     String implClassName = specFile.getName().replace(".spec", "");
 
-                    String implClassContents = aiCoder.generateImplementationClassContents(spec, testClassContents, implClassName)
+                    String implClassContents = aiImplementationGenerator.generateImplementationClassContents(spec, testClassContents, implClassName)
                             .replace("```java", "")
                             .replace("```", "");
 
-                    PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
-                            PsiFile implClassFile = psiFileFactory.createFileFromText(implClassName + ".java", implClassContents);
-                            PsiDirectory implClassDirectory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                            PsiFile implClassJavaFile = (PsiFile) implClassDirectory.add(implClassFile); // TODO?
-                            OpenFileAction.openFile(implClassJavaFile.getVirtualFile(), project); // TODO ?
+                            PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
+                            Utils.createFileAndShiftExistingFilesIfAny(implClassName, ".java", implClassContents, directory, project);
                         });
                     });
 
-//                    runTests(testClassFile);
+                    //  TODO runTests(testClassFile);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

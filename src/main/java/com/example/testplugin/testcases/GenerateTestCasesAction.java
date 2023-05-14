@@ -1,5 +1,6 @@
-package com.example.testplugin;
+package com.example.testplugin.testcases;
 
+import com.example.testplugin.Utils;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -13,14 +14,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
-public class VerifySpecAction extends AnAction {
+public class GenerateTestCasesAction extends AnAction {
 
-    private final AiSpecVerifier aiSpecVerifier = new AiSpecVerifier(); // TODO memory leak
+    public static final String TESTCASES = ".testcases";
+    public static final String TXT = ".txt";
+
+    private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -34,7 +36,7 @@ public class VerifySpecAction extends AnAction {
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
         VirtualFile specFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
 
-        Task.Backgroundable task = new Task.Backgroundable(project, "Verifying " + specFile.getName()) {
+        Task.Backgroundable task = new Task.Backgroundable(project, "Generating test cases from " + specFile.getName()) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
@@ -42,18 +44,14 @@ public class VerifySpecAction extends AnAction {
                 try {
                     String spec = VfsUtil.loadText(specFile);
 
-                    String specVerificationResult = aiSpecVerifier.verifySpecification(spec);
+                    String implClassName = specFile.getName().replace(".spec", "");
 
-                    PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
+                    String testCases = aiTestCaseGenerator.generateTestCases(spec, implClassName);
+
                     ApplicationManager.getApplication().invokeLater(() -> {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
-                            try {
-                                PsiFile specVerificationFile = psiFileFactory.createFileFromText(specFile.getName() + ".verification.txt", specVerificationResult.replace("\r\n", "\n"));
-                                PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
-                                directory.add(specVerificationFile);
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
+                            PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
+                            Utils.createFileAndShiftExistingFilesIfAny(implClassName + TESTCASES, TXT, testCases, directory, project);
                         });
                     });
                 } catch (Exception ex) {
