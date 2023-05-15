@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.10.1"
+    id("org.jetbrains.intellij") version "1.13.3"
 }
 
 group = "com.example"
@@ -16,7 +16,7 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.1.4")
+    version.set("2022.2.5")
     type.set("IC") // TODO IU
 
     plugins.set(listOf(/* Plugin Dependencies */))
@@ -25,13 +25,13 @@ intellij {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     patchPluginXml {
-        sinceBuild.set("221")
-        untilBuild.set("231.*")
+        sinceBuild.set("222")
+        untilBuild.set("232.*")
     }
 
     signPlugin {
@@ -48,7 +48,9 @@ tasks {
         implementation("dev.ai4j:ai4j:0.2.3")
         implementation("ch.qos.logback:logback-classic:1.3.7")
         implementation("org.projectlombok:lombok:1.18.20")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+        implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+        implementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+        implementation("org.junit.jupiter:junit-jupiter:5.9.3")
+        implementation("org.junit.platform:junit-platform-launcher:1.9.3")
     }
 }

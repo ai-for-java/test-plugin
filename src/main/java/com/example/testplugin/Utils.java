@@ -3,10 +3,18 @@ package com.example.testplugin;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+
+import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -87,7 +95,15 @@ public class Utils {
                 PsiFile oldFile = directory.findFile(oldFileName);
 
                 if (oldFile != null) {
-                    PsiFile newFile = fileFactory.createFileFromText(newFileName, oldFile.getText());
+
+                    String fileContents;
+                    if (".java".equals(fileExtension)) {
+                        fileContents = appendOrChangeNumberToClassName(oldFile.getText(), i + 1);
+                    } else {
+                        fileContents = oldFile.getText();
+                    }
+
+                    PsiFile newFile = fileFactory.createFileFromText(newFileName, fileContents);
                     directory.add(newFile);
                     oldFile.delete();
                 }
@@ -95,8 +111,8 @@ public class Utils {
 
             // Create the new file and add it to the directory
             String newFileName = baseFileName + fileExtension;
-            PsiFile specVerificationFile = fileFactory.createFileFromText(newFileName, "");
-            return (PsiFile) directory.add(specVerificationFile);
+            PsiFile newPsiFile = fileFactory.createFileFromText(newFileName, "");
+            return (PsiFile) directory.add(newPsiFile);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -104,13 +120,60 @@ public class Utils {
         return null;
     }
 
+    public static String appendOrChangeNumberToClassName(String javaCode, int number) {
+        // Regex pattern to match class definition
+        Pattern pattern = Pattern.compile("public class ([A-Za-z]+)(\\d*)");
+        Matcher matcher = pattern.matcher(javaCode);
+
+        // Replace class names with digits (if any) at the end with the new number
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            String className = matcher.group(1);
+            matcher.appendReplacement(sb, "public class " + className + number);
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
+    }
+
     public static void appendStringToTextFile(VirtualFile virtualFile, String contentToAppend) {
         // TODO optimize?
+        // TODO write to PsiFile? consider caching
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         if (document != null && contentToAppend != null) {
             int documentLength = document.getTextLength();
             document.insertString(documentLength, contentToAppend);
             FileDocumentManager.getInstance().saveDocument(document);
         }
+    }
+
+    public static VirtualFile getVirtualFileFromClass(Project project, String fullClassName) {
+        String[] parts = fullClassName.split("\\.");
+        String className = parts[parts.length - 1] + ".java";
+        Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(project, className, GlobalSearchScope.allScope(project));
+        return virtualFiles.iterator().next();
+    }
+
+    public static PsiDirectory getPsiDirectoryFromClassName(String classNameWithPackageName, Project project) {
+        // Get the package name from the class name
+        int lastDotIndex = classNameWithPackageName.lastIndexOf('.');
+        String packageName = lastDotIndex != -1 ? classNameWithPackageName.substring(0, lastDotIndex) : "";
+
+        // Get the package directory
+        VirtualFile[] contentRoots = ProjectRootManager.getInstance(project).getContentSourceRoots();
+        PsiManager psiManager = PsiManager.getInstance(project);
+        PsiDirectory psiDirectory = null;
+
+        for (VirtualFile root : contentRoots) {
+            String packagePath = packageName.replace('.', '/');
+            VirtualFile packageDir = root.findFileByRelativePath(packagePath);
+
+            if (packageDir != null && packageDir.isDirectory()) {
+                psiDirectory = psiManager.findDirectory(packageDir);
+                break;
+            }
+        }
+
+        return psiDirectory;
     }
 }

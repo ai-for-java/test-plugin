@@ -41,7 +41,6 @@ public abstract class GenerateImplementationAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
         VirtualFile specFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
-        VirtualFile testFile = getTestFileRelatedTo(specFile);
 
         // TODO check testFileExists
 
@@ -67,8 +66,9 @@ public abstract class GenerateImplementationAction extends AnAction {
 
                         ApplicationManager.getApplication().invokeLater(() -> {
                             WriteCommandAction.runWriteCommandAction(project, () -> {
-                                PsiFile file = createFileAndShiftExistingFilesIfAny(implClassName, "", ".java", directory, project);
-                                VirtualFile virtualFile = file.getVirtualFile();
+                                PsiFile implementationClassFile = createFileAndShiftExistingFilesIfAny(implClassName, "", ".java", directory, project);
+//                                String implementationClassPackage = ((PsiJavaFile)implementationClassFile).getPackageName();
+                                VirtualFile virtualFile = implementationClassFile.getVirtualFile();
                                 FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
 
                                 AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
@@ -96,6 +96,14 @@ public abstract class GenerateImplementationAction extends AnAction {
                                             appendStringToTextFile(virtualFile, responseFragment);
                                         });
                                     }
+
+                                    @Override
+                                    public void handleCompleteResponse(String completeResponse) {
+
+//                                        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+//                                        int result = compiler.run(null, null, null, "path/to/your/java/file");
+
+                                    }
                                 });
                             });
                         });
@@ -109,11 +117,5 @@ public abstract class GenerateImplementationAction extends AnAction {
         };
 
         ProgressManager.getInstance().run(task);
-    }
-
-    private VirtualFile getTestFileRelatedTo(VirtualFile specFile) {
-        VirtualFile parentDir = specFile.getParent();
-        String targetFileName = specFile.getNameWithoutExtension() + "Test.java";
-        return parentDir.findChild(targetFileName);
     }
 }
