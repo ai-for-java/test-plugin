@@ -32,7 +32,7 @@ public class AiTestCaseGenerator {
     private final OpenAiChatModel model;
 
     public AiTestCaseGenerator(OpenAiModelName modelName) {
-        model = OpenAiChatModel.builder()
+        this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
                 .temperature(0.0)

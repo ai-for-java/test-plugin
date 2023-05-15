@@ -71,8 +71,8 @@
                           anchor="after" relative-to-action="GenerateTestCasesWithGpt3Action"/>
         </action>
 
-        <action id="GenerateTestsAction"
-                class="com.example.testplugin.tests.GenerateTestsAction"
+        <action id="GenerateTestsWithGpt3Action"
+                class="com.example.testplugin.tests.GenerateTestsWithGpt3Action"
                 text="Generate Tests"
                 description="Generate tests"
                 icon="AllIcons.Diff.MagicResolve">
@@ -80,13 +80,31 @@
                           anchor="after" relative-to-action="GenerateTestCasesWithGpt4Action"/>
         </action>
 
-        <action id="GenerateImplementation"
-                class="com.example.testplugin.impl.GenerateImplementationAction"
+        <action id="GenerateTestsWithGpt4Action"
+                class="com.example.testplugin.tests.GenerateTestsWithGpt4Action"
+                text="Generate Tests (GPT-4)"
+                description="Generate tests (GPT-4)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestsWithGpt3Action"/>
+        </action>
+
+        <action id="GenerateImplementationWithGpt3Action"
+                class="com.example.testplugin.impl.GenerateImplementationWithGpt3Action"
                 text="Generate Implementation"
                 description="Generate implementation"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="GenerateTestsAction"/>
+                          anchor="after" relative-to-action="GenerateTestsWithGpt4Action"/>
+        </action>
+
+        <action id="GenerateImplementationWithGpt4Action"
+                class="com.example.testplugin.impl.GenerateImplementationWithGpt4Action"
+                text="Generate Implementation (GPT-4)"
+                description="Generate implementation (GPT-4)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateImplementationWithGpt3Action"/>
         </action>
 
     </actions>

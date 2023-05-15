@@ -17,6 +17,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import dev.ai4j.model.ModelResponseHandler;
+import dev.ai4j.model.openai.OpenAiModelName;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,9 +28,11 @@ import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TESTCASES;
 import static com.example.testplugin.testcases.GenerateTestCasesAction.TXT;
 
-public class GenerateTestsAction extends AnAction {
+public abstract class GenerateTestsAction extends AnAction {
 
-    private final AiTestGenerator aiTestGenerator = new AiTestGenerator(); // TODO memory leak
+    private final AiTestGenerator aiTestGenerator = new AiTestGenerator(getModelName()); // TODO memory leak
+
+    protected abstract OpenAiModelName getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {

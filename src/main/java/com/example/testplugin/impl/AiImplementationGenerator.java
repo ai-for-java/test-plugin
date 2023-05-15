@@ -1,7 +1,9 @@
 package com.example.testplugin.impl;
 
+import dev.ai4j.model.ModelResponseHandler;
 import dev.ai4j.model.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
+import dev.ai4j.model.openai.OpenAiModelName;
 import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
@@ -11,7 +13,6 @@ import java.util.regex.Matcher;
 
 import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
 import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 
 public class AiImplementationGenerator {
 
@@ -23,14 +24,18 @@ public class AiImplementationGenerator {
                     "It is very important that the implementation satisfies the following test cases delimited by triple square brackets [[[${test_class_contents}]]]."
     );
 
-    private final OpenAiChatModel model = OpenAiChatModel.builder()
-            .modelName(GPT_3_5_TURBO)
-            .apiKey(System.getenv("OPENAI_API_KEY"))
-            .temperature(0.0)
-            .timeout(Duration.ofMinutes(10))
-            .build();
+    private final OpenAiChatModel model;
 
-    public String generateImplementationClassContents(String spec, String testClassContents, String implClassName) {
+    public AiImplementationGenerator(OpenAiModelName modelName) {
+        this.model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(System.getenv("OPENAI_API_KEY"))
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+    }
+
+    public void generateImplementationClassContents(String spec, String testClassContents, String implClassName, ModelResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
                 messageFromSystem("You are a professional Java coder."),
                 messageFromHuman(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.apply(Map.of(
@@ -40,6 +45,6 @@ public class AiImplementationGenerator {
                 )).getPromptText())
         );
 
-        return model.chat(messages).getContents();
+        model.chat(messages, modelResponseHandler);
     }
 }
