@@ -11,7 +11,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
@@ -50,12 +49,13 @@ public abstract class GenerateTestCasesAction extends AnAction {
                 indicator.setIndeterminate(true);
 
                 try {
-                    PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
-                    String spec = specPsiFile.getText();
-
-                    String implClassName = specFile.getName().replace(".spec", "");
-
                     ApplicationManager.getApplication().runReadAction(() -> {
+                        // needs read action
+                        PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                        String spec = specPsiFile.getText();
+
+                        String implClassName = specFile.getName().replace(".spec", "");
+
                         // needs read action
                         PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
 

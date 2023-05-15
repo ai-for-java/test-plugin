@@ -19,9 +19,9 @@ public class AiTestCaseGenerator {
                     "the following technical specification delimited by triple angle brackets: <<<${spec}>>>.\n" +
                     "Each test case should be very detailed, specific and follow the following BDD-style structure:\n" +
                     "Test case #x: (put here an easy to read and understand description of a test case)\n" +
-                    "Given: (starting conditions for a test and examples of inputs)\n" +
-                    "When: (action that should be performed during the test)\n" +
-                    "Then: (expected outcome of the test with examples)\n" +
+                    "Given: (starting conditions for a test with concrete examples of inputs to the test)\n" +
+                    "When: (action that should be performed during the test. write detailed description, not code.)\n" +
+                    "Then: (expected outcome of the test with concrete examples and what should be verified)\n" +
                     "\n\n" +
                     "Each test case should be separated from other by double newline.\n" +
                     "Do not group test cases in 'Positive Test Cases', 'Negative Test Cases' or similar.\n" +

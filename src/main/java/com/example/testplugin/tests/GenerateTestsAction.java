@@ -11,7 +11,6 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
@@ -22,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.example.testplugin.Utils.appendStringToTextFile;
 import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
@@ -52,18 +52,19 @@ public abstract class GenerateTestsAction extends AnAction {
                 indicator.setIndeterminate(true);
 
                 try {
-                    PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
-                    String spec = specPsiFile.getText();
-
-                    String implClassName = specFile.getName().replace(".spec", "");
-                    String testClassName = implClassName + "Test";
-
-                    PsiFile testCasesPsiFile = getTestCasesFileRelatedTo(specFile, project);
-                    String testCasesFileContents = testCasesPsiFile.getText();
-                    List<String> testCasesList = parseTestCases(testCasesFileContents);
-                    String testCases = String.join("\n\n", testCasesList);
-
                     ApplicationManager.getApplication().runReadAction(() -> {
+                        // needs read action
+                        PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                        String spec = specPsiFile.getText();
+
+                        String implClassName = specFile.getName().replace(".spec", "");
+                        String testClassName = implClassName + "Test";
+
+                        PsiFile testCasesPsiFile = getTestCasesFileRelatedTo(specFile, project);
+                        String testCasesFileContents = testCasesPsiFile.getText();
+                        List<String> testCasesList = parseTestCases(testCasesFileContents);
+                        String testCases = String.join("\n\n", testCasesList);
+
                         // needs read action
                         PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
 
@@ -73,10 +74,26 @@ public abstract class GenerateTestsAction extends AnAction {
                                 VirtualFile virtualFile = file.getVirtualFile();
                                 FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
 
+                                AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
+
                                 aiTestGenerator.generateTestClassContents(spec, testCases, testClassName, new ModelResponseHandler() {
                                     @Override
                                     public void handleResponseFragment(String responseFragment) {
                                         WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                                            if (responseFragment == null || responseFragment.isEmpty()) {
+                                                return;
+                                            }
+
+                                            if ("```".equals(responseFragment)) {
+                                                skipNextFragmentIfJava.set(true);
+                                                return;
+                                            }
+
+                                            if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
+                                                skipNextFragmentIfJava.set(false);
+                                                return;
+                                            }
 
                                             // needs write action
                                             appendStringToTextFile(virtualFile, responseFragment);
