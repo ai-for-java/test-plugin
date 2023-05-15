@@ -50,8 +50,12 @@ public abstract class GenerateImplementationAction extends AnAction {
                 indicator.setIndeterminate(true);
 
                 try {
-                    String spec = VfsUtil.loadText(specFile);
-                    String testClassContents = VfsUtil.loadText(testFile);
+                    PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                    String spec = specPsiFile.getText();
+
+                    PsiFile testClassPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                    String testClassContents = testClassPsiFile.getText();
+
                     String implClassName = specFile.getName().replace(".spec", "");
 
                     ApplicationManager.getApplication().runReadAction(() -> {

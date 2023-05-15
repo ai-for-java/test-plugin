@@ -47,7 +47,8 @@ public abstract class AssessSpecAction extends AnAction {
                 indicator.setIndeterminate(true);
 
                 try {
-                    String spec = VfsUtil.loadText(specFile);
+                    PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                    String spec = specPsiFile.getText();
 
                     ApplicationManager.getApplication().runReadAction(() -> {
                         // needs read action

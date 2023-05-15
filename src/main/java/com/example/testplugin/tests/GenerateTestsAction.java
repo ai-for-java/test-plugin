@@ -52,12 +52,14 @@ public abstract class GenerateTestsAction extends AnAction {
                 indicator.setIndeterminate(true);
 
                 try {
-                    String spec = VfsUtil.loadText(specFile);
+                    PsiFile specPsiFile = PsiManager.getInstance(project).findFile(specFile);
+                    String spec = specPsiFile.getText();
 
                     String implClassName = specFile.getName().replace(".spec", "");
                     String testClassName = implClassName + "Test";
 
-                    String testCasesFileContents = VfsUtil.loadText(getTestCasesFileRelatedTo(specFile));
+                    PsiFile testCasesPsiFile = getTestCasesFileRelatedTo(specFile, project);
+                    String testCasesFileContents = testCasesPsiFile.getText();
                     List<String> testCasesList = parseTestCases(testCasesFileContents);
                     String testCases = String.join("\n\n", testCasesList);
 
@@ -94,16 +96,17 @@ public abstract class GenerateTestsAction extends AnAction {
         ProgressManager.getInstance().run(task);
     }
 
-    private VirtualFile getTestCasesFileRelatedTo(VirtualFile specFile) {
+    private PsiFile getTestCasesFileRelatedTo(VirtualFile specFile, Project project) {
         VirtualFile parentDir = specFile.getParent();
         String targetFileName = specFile.getNameWithoutExtension() + TESTCASES + TXT;
-        return parentDir.findChild(targetFileName);
+        VirtualFile testCasesFile = parentDir.findChild(targetFileName);
+        return PsiManager.getInstance(project).findFile(testCasesFile);
     }
 
     private static List<String> parseTestCases(String testCasesText) {
         List<String> testCases = new ArrayList<>();
         for (String testCase : testCasesText.split("\n\n")) {
-            testCases.add("Test case:\n" + testCase.trim());
+            testCases.add(testCase.trim());
         }
         return testCases;
     }
