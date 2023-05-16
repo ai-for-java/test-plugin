@@ -23,11 +23,6 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.java</depends>
-<!--    <depends>org.intellij.sdk.dependencies:junit-jupiter-api</depends>-->
-<!--    <depends>org.intellij.sdk.dependencies:junit-jupiter-engine</depends>-->
-<!--    <depends>org.intellij.sdk.dependencies:junit-jupiter</depends>-->
-<!--    <depends>org.intellij.sdk.dependencies:junit-platform-launcher</depends>-->
-    <!--    <depends optional="false">JUnit</depends>-->
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -110,15 +105,6 @@
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="after" relative-to-action="GenerateImplementationWithGpt3Action"/>
-        </action>
-
-        <action id="RunTestAction"
-                class="com.example.testplugin.runtests.RunTestAction"
-                text="Run Tests"
-                description="Run tests"
-                icon="AllIcons.Diff.Arrow">
-            <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="GenerateImplementationWithGpt4Action"/>
         </action>
 
     </actions>

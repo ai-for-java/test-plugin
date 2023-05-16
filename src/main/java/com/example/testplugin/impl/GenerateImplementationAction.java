@@ -82,7 +82,7 @@ public abstract class GenerateImplementationAction extends AnAction {
                                                 return;
                                             }
 
-                                            if ("```".equals(responseFragment)) {
+                                            if (responseFragment.contains("`")) {
                                                 skipNextFragmentIfJava.set(true);
                                                 return;
                                             }

@@ -19,7 +19,8 @@ public class AiImplementationGenerator {
     private static final PromptTemplate CREATE_IMPL_CLASS_PROMPT_TEMPLATE = PromptTemplate.from(
             "Write a correct, efficient and easy-readable implementation of ${impl_class_name} class " +
                     "according to the following specification delimited by triple angle brackets <<<${spec}>>>. " +
-                    "Do not provide additional explanations or comments. " +
+                    "It is very important that you provide only working code without any comments or explanations!!! " +
+                    "It is very harmful if you provide explanations or comments, so please provide only working java code!!! " +
                     "Your output should be correct and compiling java code. " +
                     "It is very important that the implementation satisfies the following test cases delimited by triple square brackets [[[${test_class_contents}]]]."
     );

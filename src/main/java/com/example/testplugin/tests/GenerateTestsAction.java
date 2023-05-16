@@ -61,9 +61,7 @@ public abstract class GenerateTestsAction extends AnAction {
                         String testClassName = implClassName + "Test";
 
                         PsiFile testCasesPsiFile = getTestCasesFileRelatedTo(specFile, project);
-                        String testCasesFileContents = testCasesPsiFile.getText();
-                        List<String> testCasesList = parseTestCases(testCasesFileContents);
-                        String testCases = String.join("\n\n", testCasesList);
+                        String testCases = testCasesPsiFile.getText();
 
                         // needs read action
                         PsiDirectory directory = PsiManager.getInstance(project).findDirectory(specFile.getParent());
@@ -85,7 +83,7 @@ public abstract class GenerateTestsAction extends AnAction {
                                                 return;
                                             }
 
-                                            if ("```".equals(responseFragment)) {
+                                            if (responseFragment.contains("`")) {
                                                 skipNextFragmentIfJava.set(true);
                                                 return;
                                             }
@@ -122,8 +120,8 @@ public abstract class GenerateTestsAction extends AnAction {
 
     private static List<String> parseTestCases(String testCasesText) {
         List<String> testCases = new ArrayList<>();
-        for (String testCase : testCasesText.split("\n\n")) {
-            testCases.add(testCase.trim());
+        for (String testCase : testCasesText.split("Test case #")) {
+            testCases.add("Test case #" + testCase.trim());
         }
         return testCases;
     }

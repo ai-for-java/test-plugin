@@ -30,85 +30,107 @@ public class ConsoleOutputReader implements ConsoleFilterProvider {
 
     private final List<String> lines = new ArrayList<>();
 
+    private final AtomicBoolean collectingLines = new AtomicBoolean(true);
+    private String testClassName;
+    private String testClassNameWithPackage;
+
     @Override
     public Filter[] getDefaultFilters(@NotNull Project project) {
         return new Filter[]{new Filter() {
             @Override
             public Result applyFilter(String line, int entireLength) {
-                lines.add(line);
+                if (lines.isEmpty() && line != null && (line.endsWith("Test\n") || line.endsWith("Test\n\n"))) {
+                    String[] splited = line.split(" ");
+
+                    testClassNameWithPackage = splited[splited.length - 1].trim();
+
+                    String[] spl = testClassNameWithPackage.split("\\.");
+                    testClassName = spl[spl.length - 1];
+                }else if (line != null && testClassName != null && line.contains(testClassName)) {
+                    collectingLines.set(false);
+                }else if (line != null && (line.contains("Error") || line.contains("Exception"))) {
+                    collectingLines.set(true);
+                }
 
                 if (line != null && line.startsWith("Process finished with exit code")) {
                     if (!line.startsWith("Process finished with exit code 0")) {
-
-                        String[] splited = lines.stream().filter(l -> l != null && (l.endsWith("Test\n") || l.endsWith("Test\n\n"))).findFirst().get().split(" ");
-                        String testClassNameWithPackage = splited[splited.length - 1].trim();
-                        String implClassNameWithPackage = testClassNameWithPackage.replace("Test", "");
-                        String[] spl = implClassNameWithPackage.split("\\.");
-                        String implClassName = spl[spl.length - 1];
-
-                        String consoleOutput = String.join("", lines);
-                        ApplicationManager.getApplication().runReadAction(() -> {
-
-                            String testClassContents = readFileContents(testClassNameWithPackage, project);
-                            String implClassContents = readFileContents(implClassNameWithPackage, project);
-
-                            ApplicationManager.getApplication().invokeLater(() -> {
-                                WriteCommandAction.runWriteCommandAction(project, () -> {
-
-                                    PsiDirectory psiDirectory = Utils.getPsiDirectoryFromClassName(implClassNameWithPackage, project);
-
-                                    PsiFile implementationClassFile = createFileAndShiftExistingFilesIfAny(implClassName, "", ".java", psiDirectory, project);
-                                    VirtualFile virtualFile = implementationClassFile.getVirtualFile();
-                                    FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
-
-                                    AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
-
-                                    AtomicReference<StringBuilder> lineBuilder = new AtomicReference<>(new StringBuilder());
-
-                                    aiImplementationFixer.fix(testClassContents, consoleOutput, implClassContents, new ModelResponseHandler() {
-                                        @Override
-                                        public void handleResponseFragment(String responseFragment) {
-                                            WriteCommandAction.runWriteCommandAction(project, () -> {
-
-                                                if (responseFragment == null || responseFragment.isEmpty()) {
-                                                    return;
-                                                }
-
-                                                if ("```".equals(responseFragment)) {
-                                                    skipNextFragmentIfJava.set(true);
-                                                    return;
-                                                }
-
-                                                if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
-                                                    skipNextFragmentIfJava.set(false);
-                                                    return;
-                                                }
-
-                                                lineBuilder.get().append(responseFragment);
-
-                                                if (responseFragment.contains("\n")) {
-                                                    String oneLine = lineBuilder.get().toString();
-                                                    if (!oneLine.startsWith("package")) {
-                                                        appendStringToTextFile(virtualFile, oneLine);
-                                                    }
-                                                    lineBuilder.set(new StringBuilder());
-                                                }
-                                            });
-                                        }
-                                    });
-                                });
-                            });
-
-                            System.out.println();
-                        });
+                        fix(project);
                     }
 
                     lines.clear();
                 }
 
+                if (collectingLines.get()) {
+                    lines.add(line);
+                }
+
                 return null;
             }
         }};
+    }
+
+    private void fix(@NotNull Project project) {
+        String implClassNameWithPackage = testClassNameWithPackage.replace("Test", "");
+        String[] spl = implClassNameWithPackage.split("\\.");
+        String implClassName = spl[spl.length - 1];
+
+        String consoleOutput = String.join("", lines);
+        ApplicationManager.getApplication().runReadAction(() -> {
+
+            String testClassContents = readFileContents(testClassNameWithPackage, project);
+            String implClassContents = readFileContents(implClassNameWithPackage, project);
+
+            ApplicationManager.getApplication().invokeLater(() -> {
+                WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                    PsiDirectory psiDirectory = Utils.getPsiDirectoryFromClassName(implClassNameWithPackage, project);
+
+                    PsiFile implementationClassFile = createFileAndShiftExistingFilesIfAny(implClassName, "", ".java", psiDirectory, project);
+                    VirtualFile virtualFile = implementationClassFile.getVirtualFile();
+                    FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
+
+                    AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
+
+                    AtomicBoolean skipUntilFirstSemicolon = new AtomicBoolean(true);
+
+                    aiImplementationFixer.fix(testClassContents, consoleOutput, implClassContents, new ModelResponseHandler() {
+                        @Override
+                        public void handleResponseFragment(String responseFragment) {
+                            WriteCommandAction.runWriteCommandAction(project, () -> {
+
+                                if (responseFragment == null || responseFragment.isEmpty()) {
+                                    return;
+                                }
+
+                                if (responseFragment.contains("`")) {
+                                    skipNextFragmentIfJava.set(true);
+                                    return;
+                                }
+
+                                if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
+                                    skipNextFragmentIfJava.set(false);
+                                    return;
+                                }
+
+                                if (responseFragment.contains(";") && skipUntilFirstSemicolon.get()) {
+                                    skipUntilFirstSemicolon.set(false);
+//                                    appendStringToTextFile(virtualFile, "\n\n");
+                                    return;
+                                }
+
+                                if (skipUntilFirstSemicolon.get()) {
+                                    return;
+                                }
+
+                                appendStringToTextFile(virtualFile, responseFragment);
+                            });
+                        }
+                    });
+                });
+            });
+
+            System.out.println();
+        });
     }
 
     private static String readFileContents(String testClassNameWithPackage, Project project) {

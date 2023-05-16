@@ -111,7 +111,7 @@ public class Utils {
 
             // Create the new file and add it to the directory
             String newFileName = baseFileName + fileExtension;
-            PsiFile newPsiFile = fileFactory.createFileFromText(newFileName, "");
+            PsiFile newPsiFile = fileFactory.createFileFromText(newFileName, ".java".equals(fileExtension) ? "\n\n" : "");
             return (PsiFile) directory.add(newPsiFile);
 
         } catch (Exception ex) {
