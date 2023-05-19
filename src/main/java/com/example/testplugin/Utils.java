@@ -1,5 +1,6 @@
 package com.example.testplugin;
 
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -12,18 +13,22 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class Utils {
 
-    public static void createFileAndShiftExistingFilesIfAny(String baseFileName,
-                                                            String divider,
-                                                            String fileExtension,
-                                                            String fileContents,
-                                                            PsiDirectory directory,
-                                                            Project project) {
+    public static PsiFile createFileAndShiftExistingFilesIfAny(String baseFileName,
+                                                               String divider,
+                                                               String fileExtension,
+                                                               String fileContents,
+                                                               PsiDirectory directory,
+                                                               Project project) {
         try {
             PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
 
@@ -57,12 +62,13 @@ public class Utils {
 
             // Create the new file and add it to the directory
             String newFileName = baseFileName + fileExtension;
-            PsiFile specVerificationFile = fileFactory.createFileFromText(newFileName, fileContents.replace("\r\n", "\n"));
-            directory.add(specVerificationFile);
+            PsiFile newPsiFile = fileFactory.createFileFromText(newFileName, fileContents.replace("\r\n", "\n"));
+            return (PsiFile) directory.add(newPsiFile);
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 
     public static PsiFile createFileAndShiftExistingFilesIfAny(String baseFileName,
@@ -120,7 +126,7 @@ public class Utils {
         return null;
     }
 
-    public static String appendOrChangeNumberToClassName(String javaCode, int number) {
+    private static String appendOrChangeNumberToClassName(String javaCode, int number) {
         // Regex pattern to match class definition
         Pattern pattern = Pattern.compile("public class ([A-Za-z]+)(\\d*)");
         Matcher matcher = pattern.matcher(javaCode);
