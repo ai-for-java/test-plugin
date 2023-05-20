@@ -48,12 +48,12 @@ public class AiTestCaseGenerator {
 
     public String generateTestCasesFor(String classContents, ClassMember classMember) {
         List<ChatMessage> messages = List.of(
-                messageFromHuman(PROMPT_TEMPLATE.apply(Map.of(
+                messageFromHuman(PROMPT_TEMPLATE.with(Map.of(
                         "class_contents", classContents,
                         "class_member_type", classMember.type().toString().toLowerCase(),
                         "class_member_contents", classMember.contents(),
                         "test_case_structure", getTestCaseStructureFor(classMember.type())
-                )).getPromptText())
+                )))
         );
 
         return model.chat(messages).getContents();

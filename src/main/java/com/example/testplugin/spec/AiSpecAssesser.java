@@ -3,6 +3,7 @@ package com.example.testplugin.spec;
 import dev.ai4j.model.ModelResponseHandler;
 import dev.ai4j.model.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
+import dev.ai4j.model.completion.OpenAiCompletionModel;
 import dev.ai4j.model.openai.OpenAiModelName;
 import dev.ai4j.prompt.PromptTemplate;
 
@@ -15,7 +16,7 @@ import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
 public class AiSpecAssesser {
 
     private static final PromptTemplate ASSESS_SPEC_PROMPT_TEMPLATE = PromptTemplate.from(
-            "Provide a list (ordered from most critical to least critical) of issues such as incomplete, contradictory and ambiguous requirements in the following technical specification delimited by triple angle brackets: <<<${spec}>>>\n" +
+            "Provide a list (ordered from most critical to least critical) of issues such as incomplete, contradictory and ambiguous requirements in the following technical specification delimited by triple angle brackets: <<<{{spec}}>>>\n" +
                     "After mentioning all the problems with existing specification, provide an example of comprehensive specification in a form of a list with detailed technical requirements.");
 
     private final OpenAiChatModel model;
@@ -32,9 +33,9 @@ public class AiSpecAssesser {
     public void assessSpecification(String spec, ModelResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
 //                messageFromSystem("You are a professional java coder."),
-                messageFromHuman(ASSESS_SPEC_PROMPT_TEMPLATE.apply(Map.of(
+                messageFromHuman(ASSESS_SPEC_PROMPT_TEMPLATE.with(Map.of(
                         "spec", spec
-                )).getPromptText())
+                )))
         );
 
         model.chat(messages, modelResponseHandler);

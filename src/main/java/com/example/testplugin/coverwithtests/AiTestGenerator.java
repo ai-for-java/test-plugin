@@ -49,13 +49,13 @@ public class AiTestGenerator {
 
     public void generateTestsFor(String classContents, String testCases, ClassMember classMember, ModelResponseHandler handler) {
         List<ChatMessage> messages = List.of(
-                messageFromHuman(PROMPT_TEMPLATE.apply(Map.of(
+                messageFromHuman(PROMPT_TEMPLATE.with(Map.of(
                         "class_contents", classContents,
                         "test_cases", testCases,
                         "class_member_type", classMember.type().toString().toLowerCase(),
                         "class_member_contents", classMember.contents(),
                         "test_case_structure", getTestCaseStructureFor(classMember.type())
-                )).getPromptText())
+                )))
         );
 
         model.chat(messages, handler);

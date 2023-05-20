@@ -45,7 +45,7 @@ tasks {
     }
 
     dependencies {
-        implementation("dev.ai4j:ai4j:0.2.0-SNAPSHOT")
+        implementation("dev.ai4j:ai4j:0.2.1")
         implementation("ch.qos.logback:logback-classic:1.3.7")
         implementation("org.projectlombok:lombok:1.18.20")
         implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
