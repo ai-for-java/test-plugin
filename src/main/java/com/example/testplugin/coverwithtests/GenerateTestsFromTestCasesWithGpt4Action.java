@@ -4,7 +4,7 @@ import dev.ai4j.model.openai.OpenAiModelName;
 
 import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 
-public class CoverExistingClassWithTestsWithGpt4Action extends CoverExistingClassWithTestsAction {
+public class GenerateTestsFromTestCasesWithGpt4Action extends GenerateTestsFromTestCasesAction {
 
     @Override
     protected OpenAiModelName getModelName() {

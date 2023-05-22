@@ -1,6 +1,5 @@
 package com.example.testplugin;
 
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -13,13 +12,9 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Utils {
 
@@ -181,5 +176,13 @@ public class Utils {
         }
 
         return psiDirectory;
+    }
+
+    public static void appendTo(Document document, String text) {
+        if (text == null)
+            return;
+
+        int documentLength = document.getTextLength();
+        document.insertString(documentLength, text);
     }
 }

@@ -108,18 +108,34 @@
         </action>
 
 
+        <action id="GenerateTestCasesForExistingClassWithGpt3Action"
+                class="com.example.testplugin.coverwithtests.GenerateTestCasesForExistingClassWithGpt3Action"
+                text="Generate Test Cases (GPT-3.5)"
+                description="Generate test cases (GPT-3.5)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
+        </action>
+        <action id="GenerateTestCasesForExistingClassWithGpt4Action"
+                class="com.example.testplugin.coverwithtests.GenerateTestCasesForExistingClassWithGpt4Action"
+                text="Generate Test Cases (GPT-4)"
+                description="Generate test cases (GPT-4)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestCasesForExistingClassWithGpt3Action"/>
+        </action>
+
 
         <action id="CoverExistingClassWithTestsWithGpt3Action"
-                class="com.example.testplugin.coverwithtests.CoverExistingClassWithTestsWithGpt3Action"
+                class="com.example.testplugin.coverwithtests.GenerateTestsFromTestCasesWithGpt3Action"
                 text="Cover with Tests (GPT-3.5)"
                 description="Cover with tests (GPT-3.5)"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
         </action>
-
         <action id="CoverExistingClassWithTestsWithGpt4Action"
-                class="com.example.testplugin.coverwithtests.CoverExistingClassWithTestsWithGpt4Action"
+                class="com.example.testplugin.coverwithtests.GenerateTestsFromTestCasesWithGpt4Action"
                 text="Cover with Tests (GPT-4)"
                 description="Cover with tests (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
