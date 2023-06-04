@@ -17,7 +17,7 @@ repositories {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     version.set("2022.2.5")
-    type.set("IC") // TODO IU
+    type.set("IC") // TODO IU?
 
     plugins.set(listOf(/* Plugin Dependencies */))
 }
@@ -30,7 +30,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("222")
+        sinceBuild.set("222") // TODO
         untilBuild.set("232.*")
     }
 
@@ -45,13 +45,14 @@ tasks {
     }
 
     dependencies {
-        implementation("dev.ai4j:ai4j:0.2.1")
+        implementation("dev.ai4j:ai4j:0.3.0")
         implementation("ch.qos.logback:logback-classic:1.3.7")
         implementation("org.projectlombok:lombok:1.18.20")
         implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
         implementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
         implementation("org.junit.jupiter:junit-jupiter:5.9.3")
         implementation("org.junit.platform:junit-platform-launcher:1.9.3")
-        implementation(group = "com.github.adedayo.intellij.sdk", name = "java-psi-api", version = "142.1")
+        implementation("com.github.adedayo.intellij.sdk:java-psi-api:142.1")
+        implementation("com.github.javaparser:javaparser-symbol-solver-core:3.25.3")
     }
 }

@@ -1,16 +1,16 @@
 package com.example.testplugin.coverwithtests;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestGenerator {
 
@@ -36,7 +36,7 @@ public class AiTestGenerator {
 
     private final OpenAiChatModel model;
 
-    public AiTestGenerator(OpenAiModelName modelName) {
+    public AiTestGenerator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -45,9 +45,9 @@ public class AiTestGenerator {
                 .build();
     }
 
-    public void generateTestsFor(String classContents, String testCases, ClassMember classMember, ModelResponseHandler handler) {
+    public void generateTestsFor(String classContents, String testCases, ClassMember classMember, StreamingResponseHandler handler) {
         List<ChatMessage> messages = List.of(
-                messageFromHuman(PROMPT_TEMPLATE.with(Map.of(
+                userMessage(PROMPT_TEMPLATE.format(Map.of(
                         "class_contents", classContents,
                         "test_cases", testCases,
                         "class_member_type", classMember.type().toString().toLowerCase(),

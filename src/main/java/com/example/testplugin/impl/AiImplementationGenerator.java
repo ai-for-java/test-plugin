@@ -1,18 +1,17 @@
 package com.example.testplugin.impl;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
-import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
+import static dev.ai4j.chat.SystemMessage.systemMessage;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiImplementationGenerator {
 
@@ -27,7 +26,7 @@ public class AiImplementationGenerator {
 
     private final OpenAiChatModel model;
 
-    public AiImplementationGenerator(OpenAiModelName modelName) {
+    public AiImplementationGenerator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -36,10 +35,10 @@ public class AiImplementationGenerator {
                 .build();
     }
 
-    public void generateImplementationClassContents(String spec, String testClassContents, String implClassName, ModelResponseHandler modelResponseHandler) {
+    public void generateImplementationClassContents(String spec, String testClassContents, String implClassName, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-                messageFromSystem("You are a professional Java coder."),
-                messageFromHuman(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.with(Map.of(
+                systemMessage("You are a professional Java coder."),
+                userMessage(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
                         "impl_class_name", implClassName,
                         "spec", spec,
                         "test_class_contents", Matcher.quoteReplacement(testClassContents)

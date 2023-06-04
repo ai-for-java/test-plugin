@@ -143,6 +143,23 @@
                           anchor="after" relative-to-action="CoverExistingClassWithTestsWithGpt3Action"/>
         </action>
 
+        <action id="CodeCommentingWithGpt3Action"
+                class="com.example.testplugin.codeexplanation.CodeCommentingWithGpt3Action"
+                text="Cover with Comments (GPT-3.5)"
+                description="Cover with comments (GPT-3.5)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
+        </action>
+        <action id="CodeCommentingWithGpt4Action"
+                class="com.example.testplugin.codeexplanation.CodeCommentingWithGpt4Action"
+                text="Cover with Comments (GPT-4)"
+                description="Cover with comments (GPT-4)"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="CodeCommentingWithGpt3Action"/>
+        </action>
+
     </actions>
 
 </idea-plugin>

@@ -1,17 +1,16 @@
 package com.example.testplugin.implfixer;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiImplementationFixer {
 
@@ -24,7 +23,7 @@ public class AiImplementationFixer {
 
     private final OpenAiChatModel model;
 
-    public AiImplementationFixer(OpenAiModelName modelName) {
+    public AiImplementationFixer(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -33,9 +32,9 @@ public class AiImplementationFixer {
                 .build();
     }
 
-    public void fix(String testClassContents, String consoleOutput, String implClassContents, ModelResponseHandler modelResponseHandler) {
+    public void fix(String testClassContents, String consoleOutput, String implClassContents, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-                messageFromHuman(FIX_IMPL_CLASS_PROMPT_TEMPLATE.with(Map.of(
+                userMessage(FIX_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
                         "test_class_contents", Matcher.quoteReplacement(testClassContents),
                         "console_output", Matcher.quoteReplacement(consoleOutput),
                         "impl_class_contents", Matcher.quoteReplacement(implClassContents)

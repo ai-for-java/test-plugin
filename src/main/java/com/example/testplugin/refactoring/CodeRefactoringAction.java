@@ -15,8 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.openai.OpenAiModelName;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import static com.example.testplugin.Utils.appendStringToTextFile;
@@ -28,7 +27,7 @@ public abstract class CodeRefactoringAction extends AnAction {
     public static final String REFACTORING = "refactoringRequirements";
     private final AiRefactoring refactoring = new AiRefactoring(getModelName());
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -68,14 +67,20 @@ public abstract class CodeRefactoringAction extends AnAction {
                                 VirtualFile virtualFile = file.getVirtualFile();
                                 FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
 
-                                refactoring.refactor(smellyCode, requirements, new ModelResponseHandler() {
+                                refactoring.refactor(smellyCode, requirements, new StreamingResponseHandler() {
                                     @Override
-                                    public void handleResponseFragment(String responseFragment) {
+                                    public void onPartialResponse(String partialResponse) {
                                         WriteCommandAction.runWriteCommandAction(project, () -> {
 
                                             // needs write action
-                                            appendStringToTextFile(virtualFile, responseFragment);
+                                            appendStringToTextFile(virtualFile, partialResponse);
                                         });
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable error) {
+                                        // TODO
+                                        error.printStackTrace();
                                     }
                                 });
                             });

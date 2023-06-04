@@ -1,16 +1,15 @@
 package com.example.testplugin.testcases;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestCaseGenerator {
 
@@ -20,7 +19,7 @@ public class AiTestCaseGenerator {
                     "Each test case should be very detailed, specific and follow the following BDD-style structure:\n" +
                     "Test case #x: (put here an easy to read and understand description of a test case)\n" +
                     "Given: (starting conditions for a test with concrete examples of inputs to the test)\n" +
-                    "When: (action that should be performed during the test. write detailed description, not code.)\n" +
+                    "When: (action that should be performed during the test. write detailed description,  notcode.)\n" +
                     "Then: (expected outcome of the test with concrete examples and what should be verified)\n" +
                     "\n\n" +
                     "Each test case should be separated from other by double newline.\n" +
@@ -31,7 +30,7 @@ public class AiTestCaseGenerator {
 
     private final OpenAiChatModel model;
 
-    public AiTestCaseGenerator(OpenAiModelName modelName) {
+    public AiTestCaseGenerator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -40,9 +39,9 @@ public class AiTestCaseGenerator {
                 .build();
     }
 
-    public void generateTestCases(String spec, String implClassName, ModelResponseHandler modelResponseHandler) {
+    public void generateTestCases(String spec, String implClassName, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-                messageFromHuman(CREATE_TEST_CASES_PROMPT_TEMPLATE.with(Map.of(
+                userMessage(CREATE_TEST_CASES_PROMPT_TEMPLATE.format(Map.of(
                         "impl_class_name", implClassName,
                         "spec", spec
                 )))

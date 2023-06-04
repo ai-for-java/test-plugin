@@ -15,8 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.openai.OpenAiModelName;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +27,7 @@ public abstract class GenerateImplementationAction extends AnAction {
 
     private final AiImplementationGenerator aiImplementationGenerator = new AiImplementationGenerator(getModelName()); // TODO memory leak
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -73,36 +72,42 @@ public abstract class GenerateImplementationAction extends AnAction {
 
                                 AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
 
-                                aiImplementationGenerator.generateImplementationClassContents(spec, testClassContents, implClassName, new ModelResponseHandler() {
+                                aiImplementationGenerator.generateImplementationClassContents(spec, testClassContents, implClassName, new StreamingResponseHandler() {
                                     @Override
-                                    public void handleResponseFragment(String responseFragment) {
+                                    public void onPartialResponse(String partialResponse) {
                                         WriteCommandAction.runWriteCommandAction(project, () -> {
 
-                                            if (responseFragment == null || responseFragment.isEmpty()) {
+                                            if (partialResponse == null || partialResponse.isEmpty()) {
                                                 return;
                                             }
 
-                                            if (responseFragment.contains("`")) {
+                                            if (partialResponse.contains("`")) {
                                                 skipNextFragmentIfJava.set(true);
                                                 return;
                                             }
 
-                                            if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
+                                            if ("java".equals(partialResponse) && skipNextFragmentIfJava.get()) {
                                                 skipNextFragmentIfJava.set(false);
                                                 return;
                                             }
 
                                             // needs write action
-                                            appendStringToTextFile(virtualFile, responseFragment);
+                                            appendStringToTextFile(virtualFile, partialResponse);
                                         });
                                     }
 
                                     @Override
-                                    public void handleCompleteResponse(String completeResponse) {
+                                    public void onComplete() {
 
 //                                        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 //                                        int result = compiler.run(null, null, null, "path/to/your/java/file");
 
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable error) {
+                                        // TODO
+                                        error.printStackTrace();
                                     }
                                 });
                             });

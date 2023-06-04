@@ -12,8 +12,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.openai.OpenAiModelName;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public abstract class GenerateTestCasesForExistingClassAction extends AnAction {
     private final AiClassOutliner aiClassOutliner = new AiClassOutliner(); // TODO memory leak
     private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(getModelName()); // TODO memory leak
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -85,21 +84,27 @@ public abstract class GenerateTestCasesForExistingClassAction extends AnAction {
                     }
 
                     shouldWait.set(true);
-                    aiTestCaseGenerator.generateTestCasesFor(classContents, classMember, new ModelResponseHandler() {
+                    aiTestCaseGenerator.generateTestCasesFor(classContents, classMember, new StreamingResponseHandler() {
                         @Override
-                        public void handleResponseFragment(String responseFragment) {
+                        public void onPartialResponse(String partialResponse) {
                             WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
-                                appendTo(newTestCasesDocument, responseFragment);
+                                appendTo(newTestCasesDocument, partialResponse);
                             });
                         }
 
                         @Override
-                        public void handleCompleteResponse(String completeResponse) {
+                        public void onComplete() {
                             WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
                                 appendTo(newTestCasesDocument, "\n\n");
                                 FileDocumentManager.getInstance().saveDocument(newTestCasesDocument);
                                 shouldWait.set(false);
                             });
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            // TODO
+                            error.printStackTrace();
                         }
                     });
                 });

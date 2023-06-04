@@ -1,23 +1,27 @@
 package com.example.testplugin.codeexplanation;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
-import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
+import static dev.ai4j.chat.SystemMessage.systemMessage;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
-public class AiCommenting {
+public class AiCodeCommentator {
 
-    private static final PromptTemplate CODE_EXPLANATION_PROMPT_TEMPLATE = PromptTemplate.from(
+    private static final PromptTemplate CODE_COMMENTING_PROMPT_TEMPLATE = PromptTemplate.from(
             """
-                    Here are some guidelines for writing effective comments:
+                   Cover the following code with comments:
+                   
+                   Code:
+                   {{code}}
+                   
+                   Guidelines:
                      - Use block comments for method-level and class-level documentation;
                      - Use inline comments to explain specific code segments;
                      - Begin comments with a capital letter and use proper grammar and punctuation;
@@ -25,12 +29,13 @@ public class AiCommenting {
                      - Explain the purpose of the code, not the code itself. Comments should focus on providing additional context or clarifying complex logic;
                      - Use comments to document important decisions, assumptions, or constraints related to the method or its behavior;
                      - Comment on tricky or non-intuitive parts of the code, including any workarounds or optimizations.
-                    Please write comments to explain the methods and functionality of the following {{smellyCode}}.
-                    Provide full existing code with covered with comments.
+                    
+                    Provide only java code covered with comments.
+                    Do NOT provide anything else.
                     """);
     private final OpenAiChatModel model;
 
-    public AiCommenting(OpenAiModelName modelName) {
+    public AiCodeCommentator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -39,12 +44,11 @@ public class AiCommenting {
                 .build();
     }
 
-    public void addComments(String smellyCode, ModelResponseHandler modelResponseHandler) {
+    public void coverWithComments(String code, StreamingResponseHandler handler) {
         List<ChatMessage> messages = List.of(
-                messageFromSystem("You are a senior Java software engineer that explains and comments on code well."),
-                messageFromHuman(CODE_EXPLANATION_PROMPT_TEMPLATE.with(Map.of("smellyCode", smellyCode)))
+                systemMessage("You are a senior Java software engineer that explains and comments the code well."),
+                userMessage(CODE_COMMENTING_PROMPT_TEMPLATE.format(Map.of("code", code)))
         );
-        model.chat(messages, modelResponseHandler);
+        model.chat(messages, handler);
     }
-
 }

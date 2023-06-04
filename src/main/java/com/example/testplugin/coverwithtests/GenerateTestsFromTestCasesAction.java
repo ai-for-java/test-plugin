@@ -12,12 +12,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
-import dev.ai4j.model.openai.OpenAiModelName;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
@@ -26,7 +21,7 @@ public abstract class GenerateTestsFromTestCasesAction extends AnAction {
 
     private final AiTestGenerator aiTestGenerator = new AiTestGenerator(getModelName()); // TODO memory leak
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -75,9 +70,9 @@ public abstract class GenerateTestsFromTestCasesAction extends AnAction {
     }
 
     //    private void generateTests(AnActionEvent e, String classContents, Document newTestClassDocument, ClassMember classMember, String testCases) {
-//        aiTestGenerator.generateTestsFor(classContents, testCases, classMember, new ModelResponseHandler() {
+//        aiTestGenerator.generateTestsFor(classContents, testCases, classMember, new StreamingResponseHandler() {
 //            @Override
-//            public void handleResponseFragment(String responseFragment) {
+//            public void onPartialResponse(String partialResponse) {
 //                WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
 //                    if (responseFragment != null) {
 //                        int documentLength = newTestClassDocument.getTextLength();

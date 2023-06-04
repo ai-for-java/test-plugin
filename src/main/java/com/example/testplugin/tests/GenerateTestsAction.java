@@ -15,8 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.openai.OpenAiModelName;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public abstract class GenerateTestsAction extends AnAction {
 
     private final AiTestGenerator aiTestGenerator = new AiTestGenerator(getModelName()); // TODO memory leak
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -74,28 +73,34 @@ public abstract class GenerateTestsAction extends AnAction {
 
                                 AtomicBoolean skipNextFragmentIfJava = new AtomicBoolean(false);
 
-                                aiTestGenerator.generateTestClassContents(spec, testCases, testClassName, new ModelResponseHandler() {
+                                aiTestGenerator.generateTestClassContents(spec, testCases, testClassName, new StreamingResponseHandler() {
                                     @Override
-                                    public void handleResponseFragment(String responseFragment) {
+                                    public void onPartialResponse(String partialResponse) {
                                         WriteCommandAction.runWriteCommandAction(project, () -> {
 
-                                            if (responseFragment == null || responseFragment.isEmpty()) {
+                                            if (partialResponse == null || partialResponse.isEmpty()) {
                                                 return;
                                             }
 
-                                            if (responseFragment.contains("`")) {
+                                            if (partialResponse.contains("`")) {
                                                 skipNextFragmentIfJava.set(true);
                                                 return;
                                             }
 
-                                            if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
+                                            if ("java".equals(partialResponse) && skipNextFragmentIfJava.get()) {
                                                 skipNextFragmentIfJava.set(false);
                                                 return;
                                             }
 
                                             // needs write action
-                                            appendStringToTextFile(virtualFile, responseFragment);
+                                            appendStringToTextFile(virtualFile, partialResponse);
                                         });
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable error) {
+                                        // TODO
+                                        error.printStackTrace();
                                     }
                                 });
                             });

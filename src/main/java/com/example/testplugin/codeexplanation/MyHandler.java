@@ -15,6 +15,7 @@ import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.util.PsiTreeUtil;
 
 public class MyHandler implements EditorPopupHandler {
+
     public MyHandler() {
         super();
     }

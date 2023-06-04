@@ -1,17 +1,15 @@
 package com.example.testplugin.spec;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.completion.OpenAiCompletionModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiSpecAssesser {
 
@@ -21,7 +19,7 @@ public class AiSpecAssesser {
 
     private final OpenAiChatModel model;
 
-    public AiSpecAssesser(OpenAiModelName modelName) {
+    public AiSpecAssesser(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -30,10 +28,10 @@ public class AiSpecAssesser {
                 .build();
     }
 
-    public void assessSpecification(String spec, ModelResponseHandler modelResponseHandler) {
+    public void assessSpecification(String spec, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-//                messageFromSystem("You are a professional java coder."),
-                messageFromHuman(ASSESS_SPEC_PROMPT_TEMPLATE.with(Map.of(
+//                SystemMessage("You are a professional java coder."),
+                userMessage(ASSESS_SPEC_PROMPT_TEMPLATE.format(Map.of(
                         "spec", spec
                 )))
         );

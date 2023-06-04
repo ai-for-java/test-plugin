@@ -6,23 +6,19 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import dev.ai4j.model.ModelResponseHandler;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static com.example.testplugin.Utils.appendStringToTextFile;
-import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
-import static com.example.testplugin.Utils.getVirtualFileFromClass;
+import static com.example.testplugin.Utils.*;
 import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 
 public class ConsoleOutputReader implements ConsoleFilterProvider {
@@ -47,9 +43,9 @@ public class ConsoleOutputReader implements ConsoleFilterProvider {
 
                     String[] spl = testClassNameWithPackage.split("\\.");
                     testClassName = spl[spl.length - 1];
-                }else if (line != null && testClassName != null && line.contains(testClassName)) {
+                } else if (line != null && testClassName != null && line.contains(testClassName)) {
                     collectingLines.set(false);
-                }else if (line != null && (line.contains("Error") || line.contains("Exception"))) {
+                } else if (line != null && (line.contains("Error") || line.contains("Exception"))) {
                     collectingLines.set(true);
                 }
 
@@ -94,26 +90,26 @@ public class ConsoleOutputReader implements ConsoleFilterProvider {
 
                     AtomicBoolean skipUntilFirstSemicolon = new AtomicBoolean(true);
 
-                    aiImplementationFixer.fix(testClassContents, consoleOutput, implClassContents, new ModelResponseHandler() {
+                    aiImplementationFixer.fix(testClassContents, consoleOutput, implClassContents, new StreamingResponseHandler() {
                         @Override
-                        public void handleResponseFragment(String responseFragment) {
+                        public void onPartialResponse(String partialResponse) {
                             WriteCommandAction.runWriteCommandAction(project, () -> {
 
-                                if (responseFragment == null || responseFragment.isEmpty()) {
+                                if (partialResponse == null || partialResponse.isEmpty()) {
                                     return;
                                 }
 
-                                if (responseFragment.contains("`")) {
+                                if (partialResponse.contains("`")) {
                                     skipNextFragmentIfJava.set(true);
                                     return;
                                 }
 
-                                if ("java".equals(responseFragment) && skipNextFragmentIfJava.get()) {
+                                if ("java".equals(partialResponse) && skipNextFragmentIfJava.get()) {
                                     skipNextFragmentIfJava.set(false);
                                     return;
                                 }
 
-                                if (responseFragment.contains(";") && skipUntilFirstSemicolon.get()) {
+                                if (partialResponse.contains(";") && skipUntilFirstSemicolon.get()) {
                                     skipUntilFirstSemicolon.set(false);
 //                                    appendStringToTextFile(virtualFile, "\n\n");
                                     return;
@@ -123,8 +119,14 @@ public class ConsoleOutputReader implements ConsoleFilterProvider {
                                     return;
                                 }
 
-                                appendStringToTextFile(virtualFile, responseFragment);
+                                appendStringToTextFile(virtualFile, partialResponse);
                             });
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            // TODO
+                            error.printStackTrace();
                         }
                     });
                 });

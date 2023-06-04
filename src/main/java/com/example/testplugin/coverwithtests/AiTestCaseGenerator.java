@@ -1,18 +1,15 @@
 package com.example.testplugin.coverwithtests;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.completion.OpenAiCompletionModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
-import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestCaseGenerator {
 
@@ -27,12 +24,16 @@ public class AiTestCaseGenerator {
             Take into consideration that you cannot verify class fields directly, so the only way you can verify the method behaves as expected is to verify method output and use other non-private methods (if needed).
             Make sure you test behaviour, not implementation details.
             Do not provide code yet, just provide your thoughts.
+            
+            Test cases should follow the following structure:
+            {{test_case_structure}}
+            
             Let's think step by step."""
     );
 
     private final OpenAiChatModel model;
 
-    public AiTestCaseGenerator(OpenAiModelName modelName) {
+    public AiTestCaseGenerator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -41,10 +42,10 @@ public class AiTestCaseGenerator {
                 .build();
     }
 
-    public void generateTestCasesFor(String classContents, ClassMember classMember, ModelResponseHandler handler) {
+    public void generateTestCasesFor(String classContents, ClassMember classMember, StreamingResponseHandler handler) {
         List<ChatMessage> messages = List.of(
-//                messageFromSystem("You are Kent Beck, master of TDD."),
-                messageFromHuman(PROMPT_TEMPLATE.with(Map.of(
+//                SystemMessage("You are Kent Beck, master of TDD."),
+                userMessage(PROMPT_TEMPLATE.format(Map.of(
                         "class_contents", classContents,
                         "class_member_type", classMember.type().toString().toLowerCase(),
                         "class_member_contents", classMember.contents(),

@@ -1,18 +1,17 @@
 package com.example.testplugin.tests;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
-import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
+import static dev.ai4j.chat.SystemMessage.systemMessage;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestGenerator {
 
@@ -26,7 +25,7 @@ public class AiTestGenerator {
 
     private final OpenAiChatModel model;
 
-    public AiTestGenerator(OpenAiModelName modelName) {
+    public AiTestGenerator(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -35,10 +34,10 @@ public class AiTestGenerator {
                 .build();
     }
 
-    public void generateTestClassContents(String spec, String testCases, String testClassName, ModelResponseHandler modelResponseHandler) {
+    public void generateTestClassContents(String spec, String testCases, String testClassName, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-                messageFromSystem("You are a professional software tester."), // TODO try without?
-                messageFromHuman(CREATE_TEST_CLASS_PROMPT_TEMPLATE.with(Map.of(
+                systemMessage("You are a professional software tester."), // TODO try without?
+                userMessage(CREATE_TEST_CLASS_PROMPT_TEMPLATE.format(Map.of(
                         "spec", spec,
                         "test_cases", Matcher.quoteReplacement(testCases), // TODO move to ai4j?
                         "test_class_name", testClassName

@@ -15,8 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.openai.OpenAiModelName;
+import dev.ai4j.StreamingResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
 import static com.example.testplugin.Utils.appendStringToTextFile;
@@ -24,9 +23,9 @@ import static com.example.testplugin.Utils.createFileAndShiftExistingFilesIfAny;
 
 public abstract class CodeCommentingAction extends AnAction {
 
-    private final AiCommenting codeCommenting = new AiCommenting(getModelName());
+    private final AiCodeCommentator codeCommenting = new AiCodeCommentator(getModelName());
 
-    protected abstract OpenAiModelName getModelName();
+    protected abstract String getModelName();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -38,9 +37,9 @@ public abstract class CodeCommentingAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-        VirtualFile smellyCodeFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
+        VirtualFile javaClassFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
 
-        Task.Backgroundable task = new Task.Backgroundable(project, "Add explaining comments to existing code " + smellyCodeFile.getName()) {
+        Task.Backgroundable task = new Task.Backgroundable(project, "Add explaining comments to existing code " + javaClassFile.getName()) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
@@ -48,28 +47,34 @@ public abstract class CodeCommentingAction extends AnAction {
                 try {
                     ApplicationManager.getApplication().runReadAction(() -> {
                         // needs read action
-                        PsiFile specPsiFile = PsiManager.getInstance(project).findFile(smellyCodeFile);
-                        String smellyCode = specPsiFile.getText();
+                        PsiFile specPsiFile = PsiManager.getInstance(project).findFile(javaClassFile);
+                        String javaCode = specPsiFile.getText();
 
                         // needs read action
-                        PsiDirectory directory = PsiManager.getInstance(project).findDirectory(smellyCodeFile.getParent());
+                        PsiDirectory directory = PsiManager.getInstance(project).findDirectory(javaClassFile.getParent());
 
                         ApplicationManager.getApplication().invokeLater(() -> {
                             WriteCommandAction.runWriteCommandAction(project, () -> {
                                 // needs write action
-                                String commentedCodeFileName = smellyCodeFile.getName().replace(".java", "");
+                                String commentedCodeFileName = javaClassFile.getName().replace(".java", "");
                                 PsiFile file = createFileAndShiftExistingFilesIfAny(commentedCodeFileName, "", ".java", directory, project);
                                 VirtualFile virtualFile = file.getVirtualFile();
                                 FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
 
-                                codeCommenting.addComments(smellyCode, new ModelResponseHandler() {
+                                codeCommenting.coverWithComments(javaCode, new StreamingResponseHandler() {
                                     @Override
-                                    public void handleResponseFragment(String responseFragment) {
+                                    public void onPartialResponse(String partialResponse) {
                                         WriteCommandAction.runWriteCommandAction(project, () -> {
 
                                             // needs write action
-                                            appendStringToTextFile(virtualFile, responseFragment);
+                                            appendStringToTextFile(virtualFile, partialResponse);
                                         });
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable error) {
+                                        // TODO
+                                        error.printStackTrace();
                                     }
                                 });
                             });

@@ -1,17 +1,16 @@
 package com.example.testplugin.refactoring;
 
-import dev.ai4j.model.ModelResponseHandler;
-import dev.ai4j.model.chat.ChatMessage;
+import dev.ai4j.PromptTemplate;
+import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
-import dev.ai4j.model.openai.OpenAiModelName;
-import dev.ai4j.prompt.PromptTemplate;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.model.chat.MessageFromHuman.messageFromHuman;
-import static dev.ai4j.model.chat.MessageFromSystem.messageFromSystem;
+import static dev.ai4j.chat.SystemMessage.systemMessage;
+import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiRefactoring {
 
@@ -25,7 +24,7 @@ public class AiRefactoring {
 
     private final OpenAiChatModel model;
 
-    public AiRefactoring(OpenAiModelName modelName) {
+    public AiRefactoring(String modelName) {
         this.model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(System.getenv("OPENAI_API_KEY"))
@@ -34,13 +33,12 @@ public class AiRefactoring {
                 .build();
     }
 
-    public void refactor(String smellyCode, String requirements, ModelResponseHandler modelResponseHandler) {
+    public void refactor(String smellyCode, String requirements, StreamingResponseHandler modelResponseHandler) {
         List<ChatMessage> messages = List.of(
-                messageFromSystem("you are a senior Java software engineer that refactors Java code very well. You provide only clean code, really important, you don't need to write any explanation"),
-                messageFromHuman(REFACTORING_PROMPT_TEMPLATE.with(Map.of("smellyCode", smellyCode,
+                systemMessage("you are a senior Java software engineer that refactors Java code very well. You provide only clean code, really important, you don't need to write any explanation"),
+                userMessage(REFACTORING_PROMPT_TEMPLATE.format(Map.of("smellyCode", smellyCode,
                         "requirements", requirements)))
         );
         model.chat(messages, modelResponseHandler);
     }
-
 }
