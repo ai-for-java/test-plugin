@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>com.example.test-plugin</id>
+    <id>dev.ai4j.aid2</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Test-plugin</name>
+    <name>AID2</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
@@ -13,10 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+    <description>AID2 (AI Driven Development) generates code for you, while you focus on more important things</description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -30,13 +27,13 @@
         <notificationGroup id="Custom Notification Group"
                            displayType="BALLOON"
                            key="notification.group.name"/>
-        <consoleFilterProvider implementation="com.example.testplugin.ConsoleOutputReader"/>
+        <consoleFilterProvider implementation="dev.ai4j.aid2.ConsoleOutputReader"/>
     </extensions>
 
     <actions>
 
         <action id="AssessSpecWithGpt3Action"
-                class="com.example.testplugin.spec.AssessSpecWithGpt3Action"
+                class="dev.ai4j.aid2.spec.AssessSpecWithGpt3Action"
                 text="Assess Specification"
                 description="Assess specification"
                 icon="AllIcons.Actions.Preview">
@@ -45,7 +42,7 @@
         </action>
 
         <action id="AssessSpecWithGpt4Action"
-                class="com.example.testplugin.spec.AssessSpecWithGpt4Action"
+                class="dev.ai4j.aid2.spec.AssessSpecWithGpt4Action"
                 text="Assess Specification (GPT-4)"
                 description="Assess specification (GPT-4)"
                 icon="AllIcons.Actions.Preview">
@@ -54,7 +51,7 @@
         </action>
 
         <action id="GenerateTestCasesWithGpt3Action"
-                class="com.example.testplugin.testcases.GenerateTestCasesWithGpt3Action"
+                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt3Action"
                 text="Generate Test Cases"
                 description="Generate test cases"
                 icon="AllIcons.Diff.MagicResolve">
@@ -63,7 +60,7 @@
         </action>
 
         <action id="GenerateTestCasesWithGpt4Action"
-                class="com.example.testplugin.testcases.GenerateTestCasesWithGpt4Action"
+                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt4Action"
                 text="Generate Test Cases (GPT-4)"
                 description="Generate test cases (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -72,7 +69,7 @@
         </action>
 
         <action id="GenerateTestsWithGpt3Action"
-                class="com.example.testplugin.tests.GenerateTestsWithGpt3Action"
+                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt3Action"
                 text="Generate Tests"
                 description="Generate tests"
                 icon="AllIcons.Diff.MagicResolve">
@@ -81,7 +78,7 @@
         </action>
 
         <action id="GenerateTestsWithGpt4Action"
-                class="com.example.testplugin.tests.GenerateTestsWithGpt4Action"
+                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt4Action"
                 text="Generate Tests (GPT-4)"
                 description="Generate tests (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -90,7 +87,7 @@
         </action>
 
         <action id="GenerateImplementationWithGpt3Action"
-                class="com.example.testplugin.impl.GenerateImplementationWithGpt3Action"
+                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt3Action"
                 text="Generate Implementation"
                 description="Generate implementation"
                 icon="AllIcons.Diff.MagicResolve">
@@ -99,7 +96,7 @@
         </action>
 
         <action id="GenerateImplementationWithGpt4Action"
-                class="com.example.testplugin.impl.GenerateImplementationWithGpt4Action"
+                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt4Action"
                 text="Generate Implementation (GPT-4)"
                 description="Generate implementation (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -109,7 +106,7 @@
 
 
         <action id="GenerateTestCasesForExistingClassWithGpt3Action"
-                class="com.example.testplugin.coverwithtests.GenerateTestCasesForExistingClassWithGpt3Action"
+                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt3Action"
                 text="Generate Test Cases (GPT-3.5)"
                 description="Generate test cases (GPT-3.5)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -117,7 +114,7 @@
                           anchor="first"/>
         </action>
         <action id="GenerateTestCasesForExistingClassWithGpt4Action"
-                class="com.example.testplugin.coverwithtests.GenerateTestCasesForExistingClassWithGpt4Action"
+                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt4Action"
                 text="Generate Test Cases (GPT-4)"
                 description="Generate test cases (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -127,7 +124,7 @@
 
 
         <action id="CoverExistingClassWithTestsWithGpt3Action"
-                class="com.example.testplugin.coverwithtests.GenerateTestsFromTestCasesWithGpt3Action"
+                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt3Action"
                 text="Cover with Tests (GPT-3.5)"
                 description="Cover with tests (GPT-3.5)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -135,7 +132,7 @@
                           anchor="first"/>
         </action>
         <action id="CoverExistingClassWithTestsWithGpt4Action"
-                class="com.example.testplugin.coverwithtests.GenerateTestsFromTestCasesWithGpt4Action"
+                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt4Action"
                 text="Cover with Tests (GPT-4)"
                 description="Cover with tests (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -144,7 +141,7 @@
         </action>
 
         <action id="CodeCommentingWithGpt3Action"
-                class="com.example.testplugin.codeexplanation.CodeCommentingWithGpt3Action"
+                class="dev.ai4j.aid2.explain.comment.CodeCommentingWithGpt3Action"
                 text="Cover with Comments (GPT-3.5)"
                 description="Cover with comments (GPT-3.5)"
                 icon="AllIcons.Diff.MagicResolve">
@@ -152,12 +149,28 @@
                           anchor="first"/>
         </action>
         <action id="CodeCommentingWithGpt4Action"
-                class="com.example.testplugin.codeexplanation.CodeCommentingWithGpt4Action"
+                class="dev.ai4j.aid2.explain.comment.CodeCommentingWithGpt4Action"
                 text="Cover with Comments (GPT-4)"
                 description="Cover with comments (GPT-4)"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="after" relative-to-action="CodeCommentingWithGpt3Action"/>
+        </action>
+
+        <action id="CodeReadabilityAnalyzeWithGpt4Action"
+                class="dev.ai4j.aid2.codereadabilityanalyzer.CodeReadabilityAnalyzeWithGpt4Action"
+                text="CodeReadabilityAnalyzeWithGpt4Action"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
+        </action>
+
+        <action id="CodeRefactoringWithGpt4Action"
+                class="dev.ai4j.aid2.refactoring.CodeRefactoringWithGpt4Action"
+                text="CodeRefactoringWithGpt4Action"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
         </action>
 
     </actions>

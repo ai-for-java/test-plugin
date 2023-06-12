@@ -3,8 +3,8 @@ plugins {
     id("org.jetbrains.intellij") version "1.13.3"
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
+group = "dev.ai4j"
+version = "0.1"
 
 repositories {
     mavenLocal()
