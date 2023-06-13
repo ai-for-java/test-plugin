@@ -2,6 +2,7 @@ package dev.ai4j.aid2.impl;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.Config;
 import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.aid2.ApiKeys.OPENAI_API_KEY;
+
 import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -25,18 +26,20 @@ public class AiImplementationGenerator {
                     "It is very important that the implementation satisfies the following test cases delimited by triple square brackets [[[{{test_class_contents}}]]]."
     );
 
-    private final OpenAiChatModel model;
+    private final String modelName;
 
     public AiImplementationGenerator(String modelName) {
-        this.model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(OPENAI_API_KEY)
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        this.modelName = modelName;
     }
 
     public void generateImplementationClassContents(String spec, String testClassContents, String implClassName, StreamingResponseHandler modelResponseHandler) {
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(Config.openAiApiKey())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+        
         List<ChatMessage> messages = List.of(
                 systemMessage("You are a professional Java coder."),
                 userMessage(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(

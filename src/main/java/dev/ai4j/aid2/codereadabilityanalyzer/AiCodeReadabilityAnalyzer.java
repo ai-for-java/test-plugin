@@ -2,6 +2,7 @@ package dev.ai4j.aid2.codereadabilityanalyzer;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.Config;
 import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 
@@ -9,7 +10,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.aid2.ApiKeys.OPENAI_API_KEY;
 import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -28,22 +28,25 @@ public class AiCodeReadabilityAnalyzer {
                      - Follow coding style guidelines: Adhere to established coding style guidelines such as the Java Code Conventions or your organization's coding standards. Consistency in coding style across a project improves readability for everyone working on it.
                     Please provide a list of bullet points about what should be changed to improve the readability of existing code.Make sure you don't!!! advise changing public API.Provide code snippets for each change to this {{smellyCode}}:""");
 
-    private final OpenAiChatModel model;
+    private final String modelName;
 
     public AiCodeReadabilityAnalyzer(String modelName) {
-        this.model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(OPENAI_API_KEY)
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        this.modelName = modelName;
     }
 
     public void analyzeReadabilityOfCode(String smellyCode, StreamingResponseHandler handler) {
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(Config.openAiApiKey())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+
         List<ChatMessage> messages = List.of(
                 systemMessage("you are a senior Java software engineer that refactors Java code very well. You provide only clean code, really important, you don't need to write any explanation"),
                 userMessage(CODE_READABILITY_ANALYZER_PROMPT_TEMPLATE.format(Map.of("smellyCode", smellyCode)))
         );
+
         model.chat(messages, handler);
     }
 }

@@ -3,6 +3,7 @@ package dev.ai4j.aid2.coverwithtests;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.Config;
 import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 
@@ -10,7 +11,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.aid2.ApiKeys.OPENAI_API_KEY;
+
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestGenerator {
@@ -35,18 +36,20 @@ public class AiTestGenerator {
             """
     );
 
-    private final OpenAiChatModel model;
+    private final String modelName;
 
     public AiTestGenerator(String modelName) {
-        this.model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(OPENAI_API_KEY)
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        this.modelName = modelName;
     }
 
     public void generateTestsFor(String classContents, String testCases, ClassMember classMember, StreamingResponseHandler handler) {
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(Config.openAiApiKey())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+        
         List<ChatMessage> messages = List.of(
                 userMessage(PROMPT_TEMPLATE.format(Map.of(
                         "class_contents", classContents,

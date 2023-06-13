@@ -30,6 +30,14 @@
         <consoleFilterProvider implementation="dev.ai4j.aid2.ConsoleOutputReader"/>
     </extensions>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="dev.ai4j.aid2.ui.config.Aid2Configurable"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="AID2" anchor="bottom" factoryClass="dev.ai4j.aid2.ui.window.Aid2ToolWindow"/>
+    </extensions>
+
     <actions>
 
         <action id="AssessSpecWithGpt3Action"

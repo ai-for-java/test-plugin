@@ -2,6 +2,7 @@ package dev.ai4j.aid2.tests;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.Config;
 import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.aid2.ApiKeys.OPENAI_API_KEY;
+
 import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -24,18 +25,20 @@ public class AiTestGenerator {
                     "Use the following structure for test method names: given_[starting conditions]__when_[action]__then_[expected result]"
     );
 
-    private final OpenAiChatModel model;
+    private final String modelName;
 
     public AiTestGenerator(String modelName) {
-        this.model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(OPENAI_API_KEY)
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        this.modelName = modelName;
     }
 
     public void generateTestClassContents(String spec, String testCases, String testClassName, StreamingResponseHandler modelResponseHandler) {
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(Config.openAiApiKey())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+        
         List<ChatMessage> messages = List.of(
                 systemMessage("You are a professional software tester."), // TODO try without?
                 userMessage(CREATE_TEST_CLASS_PROMPT_TEMPLATE.format(Map.of(

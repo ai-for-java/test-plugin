@@ -2,6 +2,7 @@ package dev.ai4j.aid2.implfixer;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.Config;
 import dev.ai4j.chat.ChatMessage;
 import dev.ai4j.model.chat.OpenAiChatModel;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.aid2.ApiKeys.OPENAI_API_KEY;
+
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiImplementationFixer {
@@ -22,18 +23,20 @@ public class AiImplementationFixer {
                     "It is very harmful if you provide explanations or comments, so please provide only working java code!!!"
     );
 
-    private final OpenAiChatModel model;
+    private final String modelName;
 
     public AiImplementationFixer(String modelName) {
-        this.model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(OPENAI_API_KEY)
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        this.modelName = modelName;
     }
 
     public void fix(String testClassContents, String consoleOutput, String implClassContents, StreamingResponseHandler modelResponseHandler) {
+        OpenAiChatModel model = OpenAiChatModel.builder()
+                .modelName(modelName)
+                .apiKey(Config.openAiApiKey())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(10))
+                .build();
+        
         List<ChatMessage> messages = List.of(
                 userMessage(FIX_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
                         "test_class_contents", Matcher.quoteReplacement(testClassContents),

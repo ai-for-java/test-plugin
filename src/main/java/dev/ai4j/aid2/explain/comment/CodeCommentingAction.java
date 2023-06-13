@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -16,10 +15,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.ui.window.Aid2ToolWindow;
 import org.jetbrains.annotations.NotNull;
-
-import static dev.ai4j.aid2.Utils.appendStringToTextFile;
-import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 
 public abstract class CodeCommentingAction extends AnAction {
 
@@ -56,19 +53,27 @@ public abstract class CodeCommentingAction extends AnAction {
                         ApplicationManager.getApplication().invokeLater(() -> {
                             WriteCommandAction.runWriteCommandAction(project, () -> {
                                 // needs write action
-                                String commentedCodeFileName = javaClassFile.getName();
-                                PsiFile file = createFileAndShiftExistingFilesIfAny(commentedCodeFileName, "", ".commented.txt", directory, project);
-                                VirtualFile virtualFile = file.getVirtualFile();
-                                FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
+//                                String commentedCodeFileName = javaClassFile.getName();
+//                                PsiFile file = createFileAndShiftExistingFilesIfAny(commentedCodeFileName, "", ".commented.txt", directory, project);
+//                                VirtualFile virtualFile = file.getVirtualFile();
+//                                FileEditorManager.getInstance(project).openFile(virtualFile, false); // TODO try true?
+
+                                long appenderId = System.currentTimeMillis();
+                                Aid2ToolWindow.init(appenderId);
+                                Aid2ToolWindow.open(project);
 
                                 codeCommenter.coverWithComments(javaCode, new StreamingResponseHandler() {
+
                                     @Override
                                     public void onPartialResponse(String partialResponse) {
-                                        WriteCommandAction.runWriteCommandAction(project, () -> {
 
-                                            // needs write action
-                                            appendStringToTextFile(virtualFile, partialResponse);
-                                        });
+                                        Aid2ToolWindow.appendText(appenderId, partialResponse);
+
+//                                        WriteCommandAction.runWriteCommandAction(project, () -> {
+//
+//                                             needs write action
+//                                            appendStringToTextFile(virtualFile, partialResponse);
+//                                        });
                                     }
 
                                     @Override
