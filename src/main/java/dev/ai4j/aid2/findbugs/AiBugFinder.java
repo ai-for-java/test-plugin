@@ -1,4 +1,4 @@
-package dev.ai4j.aid2.explain.summary;
+package dev.ai4j.aid2.findbugs;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
@@ -10,18 +10,17 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
-public class AiCodeSummarizer {
+public class AiBugFinder {
 
     private final String modelName;
 
-    public AiCodeSummarizer(String modelName) {
+    public AiBugFinder(String modelName) {
         this.modelName = modelName;
     }
 
-    public void coverWithComments(String code, StreamingResponseHandler handler) {
+    public void findBugs(String code, StreamingResponseHandler handler) {
         OpenAiChatModel model = OpenAiChatModel.builder()
                 .modelName(modelName)
                 .apiKey(Config.openAiApiKey())
@@ -29,10 +28,10 @@ public class AiCodeSummarizer {
                 .timeout(Duration.ofMinutes(10))
                 .build();
 
-        PromptTemplate template = PromptTemplate.from(Config.explainCodePromptTemplate());
+        PromptTemplate template = PromptTemplate.from(Config.findBugsPromptTemplate());
 
         List<ChatMessage> messages = List.of(
-                systemMessage("You are a senior Java software engineer that explains and comments the code well."), // TODO needed?
+//                systemMessage("You are a senior Java software engineer that explains and comments the code well."), // TODO needed?
                 userMessage(template.format(Map.of("code", code)))
         );
 

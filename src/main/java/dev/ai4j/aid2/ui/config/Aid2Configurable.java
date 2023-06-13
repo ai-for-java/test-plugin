@@ -31,11 +31,15 @@ public class Aid2Configurable implements Configurable {
     public void apply() {
         Config.openAiApiKey(settingsPanel.getOpenAiApiKey());
         Config.coverWithCommentsPromptTemplate(settingsPanel.getCoverWithCommentsPromptTemplate());
+        Config.explainCodePromptTemplate(settingsPanel.getExplainCodePromptTemplate());
+        Config.findBugsPromptTemplate(settingsPanel.getFindBugsPromptTemplate());
     }
 
     @Override
     public void reset() {
         settingsPanel.setOpenAiApiKey(Config.openAiApiKey());
         settingsPanel.setCoverWithCommentsPromptTemplate(Config.coverWithCommentsPromptTemplate());
+        settingsPanel.setExplainCodePromptTemplate(Config.explainCodePromptTemplate());
+        settingsPanel.setFindBugsPromptTemplate(Config.findBugsPromptTemplate());
     }
 }

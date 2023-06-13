@@ -24,6 +24,8 @@ public class Aid2ToolWindow implements ToolWindowFactory {
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setFont(new Font("JetBrains Mono", Font.PLAIN, 12));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JBScrollPane(textArea);
         ContentFactory contentFactory = ContentFactory.getInstance();
         Content content = contentFactory.createContent(scrollPane, "", false);

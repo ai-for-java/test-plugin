@@ -4,7 +4,6 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
@@ -13,6 +12,8 @@ public class Aid2SettingsPanel {
     private JPanel myPanel;
     private JTextField openAiApiKeyField;
     private JTextArea coverWithCommentsField;
+    private JTextArea explainCodeField;
+    private JTextArea findBugsField;
 
     public Aid2SettingsPanel() {
         myPanel = new JPanel();
@@ -36,12 +37,34 @@ public class Aid2SettingsPanel {
         coverWithCommentsField.setWrapStyleWord(true);
         coverWithCommentsField.setFont(font);
         JScrollPane coverWithCommentsScrollPane = new JBScrollPane(coverWithCommentsField);
-
         int margin = 5;
         coverWithCommentsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
-
         coverWithCommentsPanel.add(coverWithCommentsScrollPane, BorderLayout.CENTER);
         myPanel.add(coverWithCommentsPanel);
+
+
+        JPanel explainCodePanel = new JPanel(new BorderLayout());
+        explainCodePanel.setBorder(new TitledBorder("Explain Code Prompt Template"));
+        explainCodeField = new JTextArea(6, 40);
+        explainCodeField.setLineWrap(true);
+        explainCodeField.setWrapStyleWord(true);
+        explainCodeField.setFont(font);
+        JScrollPane explainCodeScrollPane = new JBScrollPane(explainCodeField);
+        explainCodeScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
+        explainCodePanel.add(explainCodeScrollPane, BorderLayout.CENTER);
+        myPanel.add(explainCodePanel);
+
+
+        JPanel findBugsPanel = new JPanel(new BorderLayout());
+        findBugsPanel.setBorder(new TitledBorder("Find Bugs Prompt Template"));
+        findBugsField = new JTextArea(6, 40);
+        findBugsField.setLineWrap(true);
+        findBugsField.setWrapStyleWord(true);
+        findBugsField.setFont(font);
+        JScrollPane findBugsScrollPane = new JBScrollPane(findBugsField);
+        findBugsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
+        findBugsPanel.add(findBugsScrollPane, BorderLayout.CENTER);
+        myPanel.add(findBugsPanel);
     }
 
     public JPanel getPanel() {
@@ -62,5 +85,21 @@ public class Aid2SettingsPanel {
 
     public void setCoverWithCommentsPromptTemplate(String template) {
         coverWithCommentsField.setText(template);
+    }
+
+    public String getExplainCodePromptTemplate() {
+        return explainCodeField.getText();
+    }
+
+    public void setExplainCodePromptTemplate(String template) {
+        explainCodeField.setText(template);
+    }
+
+    public String getFindBugsPromptTemplate() {
+        return findBugsField.getText();
+    }
+
+    public void setFindBugsPromptTemplate(String template) {
+        findBugsField.setText(template);
     }
 }
