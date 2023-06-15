@@ -20,8 +20,6 @@ import dev.ai4j.aid2.Utils;
 import dev.ai4j.aid2.ui.error.Errors;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
-
 public abstract class CodeReadabilityAnalyseAction extends AnAction {
 
     private final AiCodeReadabilityAnalyzer readabilityAnalyzer = new AiCodeReadabilityAnalyzer(getModelName());

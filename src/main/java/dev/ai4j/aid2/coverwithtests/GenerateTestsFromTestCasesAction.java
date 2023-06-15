@@ -14,8 +14,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
+import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 
 public abstract class GenerateTestsFromTestCasesAction extends AnAction {
 

@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-
 import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -37,13 +36,13 @@ public class AiRefactoring {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
                 systemMessage("you are a senior Java software engineer that refactors Java code very well. You provide only clean code, really important, you don't need to write any explanation"),
                 userMessage(REFACTORING_PROMPT_TEMPLATE.format(Map.of("smellyCode", smellyCode,
                         "requirements", requirements)))
         );
-        
+
         model.chat(messages, modelResponseHandler);
     }
 }

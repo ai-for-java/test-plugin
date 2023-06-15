@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.coverwithtests;
 
 
-
 public class GenerateTestsFromTestCasesWithGpt3Action extends GenerateTestsFromTestCasesAction {
 
     @Override

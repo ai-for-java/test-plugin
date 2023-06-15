@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiSpecAssesser {
@@ -32,7 +31,7 @@ public class AiSpecAssesser {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
 //                SystemMessage("You are a professional java coder."),
                 userMessage(ASSESS_SPEC_PROMPT_TEMPLATE.format(Map.of(

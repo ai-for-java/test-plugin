@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.explain.summary;
 
 
-
 public class CodeSummarizingWithGpt3Action extends CodeSummarizingAction {
 
     @Override

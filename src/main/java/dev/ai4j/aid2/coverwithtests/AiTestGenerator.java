@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestGenerator {
@@ -49,7 +48,7 @@ public class AiTestGenerator {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
                 userMessage(PROMPT_TEMPLATE.format(Map.of(
                         "class_contents", classContents,

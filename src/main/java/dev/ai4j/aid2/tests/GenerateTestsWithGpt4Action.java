@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.tests;
 
 
-
 public class GenerateTestsWithGpt4Action extends GenerateTestsAction {
 
     @Override

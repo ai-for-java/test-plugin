@@ -10,7 +10,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import dev.ai4j.StreamingResponseHandler;
@@ -21,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
 import static dev.ai4j.aid2.Utils.appendTo;
 import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
-import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
 
 public abstract class GenerateTestCasesForExistingClassAction extends AnAction {
 

@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.refactoring;
 
 
-
 public class CodeRefactoringWithGpt4Action extends CodeRefactoringAction {
 
     @Override

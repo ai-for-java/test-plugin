@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestCaseGenerator {
@@ -26,10 +25,10 @@ public class AiTestCaseGenerator {
             Take into consideration that you cannot verify class fields directly, so the only way you can verify the method behaves as expected is to verify method output and use other non-private methods (if needed).
             Make sure you test behaviour, not implementation details.
             Do not provide code yet, just provide your thoughts.
-            
+                        
             Test cases should follow the following structure:
             {{test_case_structure}}
-            
+                        
             Let's think step by step."""
     );
 
@@ -46,7 +45,7 @@ public class AiTestCaseGenerator {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
 //                SystemMessage("You are Kent Beck, master of TDD."),
                 userMessage(PROMPT_TEMPLATE.format(Map.of(

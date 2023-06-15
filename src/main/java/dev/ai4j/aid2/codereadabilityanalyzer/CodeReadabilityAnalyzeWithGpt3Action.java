@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.codereadabilityanalyzer;
 
 
-
 public class CodeReadabilityAnalyzeWithGpt3Action extends CodeReadabilityAnalyseAction {
 
     @Override

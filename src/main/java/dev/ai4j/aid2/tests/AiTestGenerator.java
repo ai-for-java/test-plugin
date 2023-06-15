@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-
 import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -38,7 +37,7 @@ public class AiTestGenerator {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
                 systemMessage("You are a professional software tester."), // TODO try without?
                 userMessage(CREATE_TEST_CLASS_PROMPT_TEMPLATE.format(Map.of(

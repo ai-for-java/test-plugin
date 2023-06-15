@@ -1,6 +1,5 @@
 package dev.ai4j.aid2;
 
-import dev.ai4j.aid2.implfixer.AiImplementationFixer;
 import com.intellij.execution.filters.ConsoleFilterProvider;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.application.ApplicationManager;
@@ -12,6 +11,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.implfixer.AiImplementationFixer;
 import dev.ai4j.aid2.ui.error.Errors;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static dev.ai4j.aid2.Utils.*;
+import static dev.ai4j.aid2.Utils.appendStringToTextFile;
+import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
+import static dev.ai4j.aid2.Utils.getVirtualFileFromClass;
 
 
 public class ConsoleOutputReader implements ConsoleFilterProvider {

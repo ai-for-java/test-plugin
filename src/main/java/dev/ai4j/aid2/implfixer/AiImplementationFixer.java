@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiImplementationFixer {
@@ -36,7 +35,7 @@ public class AiImplementationFixer {
                 .temperature(0.0)
                 .timeout(Duration.ofMinutes(10))
                 .build();
-        
+
         List<ChatMessage> messages = List.of(
                 userMessage(FIX_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
                         "test_class_contents", Matcher.quoteReplacement(testClassContents),

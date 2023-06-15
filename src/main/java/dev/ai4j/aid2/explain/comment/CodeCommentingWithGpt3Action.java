@@ -1,7 +1,6 @@
 package dev.ai4j.aid2.explain.comment;
 
 
-
 public class CodeCommentingWithGpt3Action extends CodeCommentingAction {
 
     @Override

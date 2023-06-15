@@ -13,7 +13,8 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description>AID2 (AI Driven Development) generates code for you, while you focus on more important things</description>
+    <description>AID2 (AI Driven Development) generates code for you, while you focus on more important things
+    </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -39,117 +40,116 @@
     </extensions>
 
     <actions>
-<!---->
-<!--        <action id="AssessSpecWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.spec.AssessSpecWithGpt3Action"-->
-<!--                text="Assess Specification"-->
-<!--                description="Assess specification"-->
-<!--                icon="AllIcons.Actions.Preview">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="first"/>-->
-<!--        </action>-->
-<!---->
-<!--        <action id="AssessSpecWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.spec.AssessSpecWithGpt4Action"-->
-<!--                text="Assess Specification (GPT-4)"-->
-<!--                description="Assess specification (GPT-4)"-->
-<!--                icon="AllIcons.Actions.Preview">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="AssessSpecWithGpt3Action"/>-->
-<!--        </action>-->
+        <!---->
+        <!--        <action id="AssessSpecWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.spec.AssessSpecWithGpt3Action"-->
+        <!--                text="Assess Specification"-->
+        <!--                description="Assess specification"-->
+        <!--                icon="AllIcons.Actions.Preview">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="first"/>-->
+        <!--        </action>-->
+        <!---->
+        <!--        <action id="AssessSpecWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.spec.AssessSpecWithGpt4Action"-->
+        <!--                text="Assess Specification (GPT-4)"-->
+        <!--                description="Assess specification (GPT-4)"-->
+        <!--                icon="AllIcons.Actions.Preview">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="AssessSpecWithGpt3Action"/>-->
+        <!--        </action>-->
 
-<!--        <action id="GenerateTestCasesWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt3Action"-->
-<!--                text="Generate Test Cases"-->
-<!--                description="Generate test cases"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="AssessSpecWithGpt4Action"/>-->
-<!--        </action>-->
-<!---->
-<!--        <action id="GenerateTestCasesWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt4Action"-->
-<!--                text="Generate Test Cases (GPT-4)"-->
-<!--                description="Generate test cases (GPT-4)"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateTestCasesWithGpt3Action"/>-->
-<!--        </action>-->
+        <!--        <action id="GenerateTestCasesWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt3Action"-->
+        <!--                text="Generate Test Cases"-->
+        <!--                description="Generate test cases"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="AssessSpecWithGpt4Action"/>-->
+        <!--        </action>-->
+        <!---->
+        <!--        <action id="GenerateTestCasesWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.testcases.GenerateTestCasesWithGpt4Action"-->
+        <!--                text="Generate Test Cases (GPT-4)"-->
+        <!--                description="Generate test cases (GPT-4)"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateTestCasesWithGpt3Action"/>-->
+        <!--        </action>-->
 
-<!--        <action id="GenerateTestsWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt3Action"-->
-<!--                text="Generate Tests"-->
-<!--                description="Generate tests"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateTestCasesWithGpt4Action"/>-->
-<!--        </action>-->
-<!---->
-<!--        <action id="GenerateTestsWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt4Action"-->
-<!--                text="Generate Tests (GPT-4)"-->
-<!--                description="Generate tests (GPT-4)"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateTestsWithGpt3Action"/>-->
-<!--        </action>-->
-<!---->
-<!--        <action id="GenerateImplementationWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt3Action"-->
-<!--                text="Generate Implementation"-->
-<!--                description="Generate implementation"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateTestsWithGpt4Action"/>-->
-<!--        </action>-->
-<!---->
-<!--        <action id="GenerateImplementationWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt4Action"-->
-<!--                text="Generate Implementation (GPT-4)"-->
-<!--                description="Generate implementation (GPT-4)"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateImplementationWithGpt3Action"/>-->
-<!--        </action>-->
-<!---->
+        <!--        <action id="GenerateTestsWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt3Action"-->
+        <!--                text="Generate Tests"-->
+        <!--                description="Generate tests"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateTestCasesWithGpt4Action"/>-->
+        <!--        </action>-->
+        <!---->
+        <!--        <action id="GenerateTestsWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.tests.GenerateTestsWithGpt4Action"-->
+        <!--                text="Generate Tests (GPT-4)"-->
+        <!--                description="Generate tests (GPT-4)"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateTestsWithGpt3Action"/>-->
+        <!--        </action>-->
+        <!---->
+        <!--        <action id="GenerateImplementationWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt3Action"-->
+        <!--                text="Generate Implementation"-->
+        <!--                description="Generate implementation"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateTestsWithGpt4Action"/>-->
+        <!--        </action>-->
+        <!---->
+        <!--        <action id="GenerateImplementationWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.impl.GenerateImplementationWithGpt4Action"-->
+        <!--                text="Generate Implementation (GPT-4)"-->
+        <!--                description="Generate implementation (GPT-4)"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateImplementationWithGpt3Action"/>-->
+        <!--        </action>-->
+        <!---->
 
-<!--        <action id="GenerateTestCasesForExistingClassWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt3Action"-->
-<!--                text="Generate Test Cases"-->
-<!--                description="Generate test cases"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="first"/>-->
-<!--        </action>-->
-<!--        <action id="GenerateTestCasesForExistingClassWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt4Action"-->
-<!--                text="Generate Test Cases (GPT-4)"-->
-<!--                description="Generate test cases (GPT-4)"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="GenerateTestCasesForExistingClassWithGpt3Action"/>-->
-<!--        </action>-->
+        <!--        <action id="GenerateTestCasesForExistingClassWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt3Action"-->
+        <!--                text="Generate Test Cases"-->
+        <!--                description="Generate test cases"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="first"/>-->
+        <!--        </action>-->
+        <!--        <action id="GenerateTestCasesForExistingClassWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestCasesForExistingClassWithGpt4Action"-->
+        <!--                text="Generate Test Cases (GPT-4)"-->
+        <!--                description="Generate test cases (GPT-4)"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="GenerateTestCasesForExistingClassWithGpt3Action"/>-->
+        <!--        </action>-->
 
 
-<!--        <action id="CoverExistingClassWithTestsWithGpt3Action"-->
-<!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt3Action"-->
-<!--                text="Cover with Tests"-->
-<!--                description="Cover with tests"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="first"/>-->
-<!--        </action>-->
-<!--        <action id="CoverExistingClassWithTestsWithGpt4Action"-->
-<!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt4Action"-->
-<!--                text="Cover with Tests (GPT-4)"-->
-<!--                description="Cover with tests (GPT-4)"-->
-<!--                icon="AllIcons.Diff.MagicResolve">-->
-<!--            <add-to-group group-id="ProjectViewPopupMenu"-->
-<!--                          anchor="after" relative-to-action="CoverExistingClassWithTestsWithGpt3Action"/>-->
-<!--        </action>-->
+        <!--        <action id="CoverExistingClassWithTestsWithGpt3Action"-->
+        <!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt3Action"-->
+        <!--                text="Cover with Tests"-->
+        <!--                description="Cover with tests"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="first"/>-->
+        <!--        </action>-->
+        <!--        <action id="CoverExistingClassWithTestsWithGpt4Action"-->
+        <!--                class="dev.ai4j.aid2.coverwithtests.GenerateTestsFromTestCasesWithGpt4Action"-->
+        <!--                text="Cover with Tests (GPT-4)"-->
+        <!--                description="Cover with tests (GPT-4)"-->
+        <!--                icon="AllIcons.Diff.MagicResolve">-->
+        <!--            <add-to-group group-id="ProjectViewPopupMenu"-->
+        <!--                          anchor="after" relative-to-action="CoverExistingClassWithTestsWithGpt3Action"/>-->
+        <!--        </action>-->
 
-        
-        
+
         <action id="CodeSummarizingWithGpt3Action"
                 class="dev.ai4j.aid2.explain.summary.CodeSummarizingWithGpt3Action"
                 text="Explain Code"
@@ -166,9 +166,8 @@
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="after" relative-to-action="CodeSummarizingWithGpt3Action"/>
         </action>
-        
-        
-        
+
+
         <action id="CodeCommentingWithGpt3Action"
                 class="dev.ai4j.aid2.explain.comment.CodeCommentingWithGpt3Action"
                 text="Cover with Comments"
