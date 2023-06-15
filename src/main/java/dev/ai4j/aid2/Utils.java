@@ -11,6 +11,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import dev.ai4j.aid2.ui.error.Errors;
 
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -61,7 +62,7 @@ public class Utils {
             return (PsiFile) directory.add(newPsiFile);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Errors.showNotification(ex, project);
         }
         return null;
     }
@@ -116,7 +117,7 @@ public class Utils {
             return (PsiFile) directory.add(newPsiFile);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Errors.showNotification(ex, project);
         }
         return null;
     }

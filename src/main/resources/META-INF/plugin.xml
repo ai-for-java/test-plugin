@@ -24,8 +24,8 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <notificationGroup id="Custom Notification Group"
-                           displayType="BALLOON"
+        <notificationGroup id="Error Notification Group"
+                           displayType="STICKY_BALLOON"
                            key="notification.group.name"/>
         <consoleFilterProvider implementation="dev.ai4j.aid2.ConsoleOutputReader"/>
     </extensions>

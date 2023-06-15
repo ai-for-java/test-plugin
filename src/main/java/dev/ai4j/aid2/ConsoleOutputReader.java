@@ -12,6 +12,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.ui.error.Errors;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -125,14 +126,11 @@ public class ConsoleOutputReader implements ConsoleFilterProvider {
 
                         @Override
                         public void onError(Throwable error) {
-                            // TODO
-                            error.printStackTrace();
+                            Errors.showNotification(error, project);
                         }
                     });
                 });
             });
-
-            System.out.println();
         });
     }
 

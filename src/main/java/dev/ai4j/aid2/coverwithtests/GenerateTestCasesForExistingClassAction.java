@@ -10,9 +10,11 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import dev.ai4j.StreamingResponseHandler;
+import dev.ai4j.aid2.ui.error.Errors;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -103,8 +105,7 @@ public abstract class GenerateTestCasesForExistingClassAction extends AnAction {
 
                         @Override
                         public void onError(Throwable error) {
-                            // TODO
-                            error.printStackTrace();
+                            Errors.showNotification(error, e.getProject());
                         }
                     });
                 });

@@ -31,7 +31,6 @@ public class AiBugFinder {
         PromptTemplate template = PromptTemplate.from(Config.findBugsPromptTemplate());
 
         List<ChatMessage> messages = List.of(
-//                systemMessage("You are a senior Java software engineer that explains and comments the code well."), // TODO needed?
                 userMessage(template.format(Map.of("code", code)))
         );
 
