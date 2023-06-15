@@ -31,18 +31,18 @@ public class Config {
 
     private static final String DEFAULT_COVER_WITH_COMMENTS_PROMPT_TEMPLATE = """
             Cover the following code with comments:
-            
+
             Code:
             {{code}}
-            
+
             Guidelines:
             Be concise and to the point. Avoid unnecessary comments that simply restate the code.
             Explain the purpose of the code, not the code itself.
             Comments should focus on providing additional context or clarifying complex logic.
             Comment on tricky or non-intuitive parts of the code, including any workarounds or optimizations.
-            Do not output package declaration.
+            Do not print package declaration and imports.
             DO NOT Output body (implementation code) of constructors and methods, replace it with "...".
-            Provide a short 3-sentence summary of the class functionality right over the class definition.
+            Provide a short 3-sentence summary of the class functionality right over the class definition (as a javadoc).
             For each class member (field, constructor, method, etc) provide a 2-3 sentence summary of what it does and how.
             Provide only java code covered with comments, nothing else.
             """;
@@ -93,7 +93,9 @@ public class Config {
     }
 
     private static final String DEFAULT_FIND_BUGS_PROMPT_TEMPLATE = """
-            Find bugs or potential problems in the following code:
+            Analyze the following code snippet to identify any logical, syntactic, or semantic errors that prevent the code from functioning as intended.
+            Do not consider design flaws or code smells.
+            If you find any bugs, list them below.
 
             Code:
             {{code}}
