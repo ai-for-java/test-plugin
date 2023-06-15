@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.ai4j.aid2.Utils.*;
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
+
 
 public class ConsoleOutputReader implements ConsoleFilterProvider {
 
