@@ -18,18 +18,23 @@ public class AiTestCaseGenerator {
             Given the following class:
             {{class_contents}}
                         
-            Think about what is the best strategy to test the following {{class_member_type}}:
+            Provide an exhaustive list of Junit5 and AssertJ test cases for the following {{class_member_type}}:
             {{class_member_contents}}
                         
-            Make sure you cover all execution paths on this method and consider all the possible negative, positive, edge and corner cases.
-            Take into consideration that you cannot verify class fields directly, so the only way you can verify the method behaves as expected is to verify method output and use other non-private methods (if needed).
-            Make sure you test behaviour, not implementation details.
-            Do not provide code yet, just provide your thoughts.
-                        
-            Test cases should follow the following structure:
+            Each test case should have the following structure:
             {{test_case_structure}}
                         
-            Let's think step by step."""
+            Remember that in java you CANNOT use "null" as a value for primitive types (byte, short, int, long, float, double, boolean, char)!!!
+            Remember that you DO NOT have access to non-public class fields, so you CANNOT verify and assert them after the test!!!
+            DO NOT provide test  cases that cannot be compiled!!!
+            Do not provide any comments and explanations aside from test cases.
+            Each test case block should be separated by a single blank line.
+            Use the following structure for test method names: given_[starting conditions]__when_[action]__then_[expected result].
+            DO NOT provide test cases for getters and setters.
+            DO NOT provide package, imports and class signature!!!
+            DO NOT provide anything aside from test methods. DO NOT provide comments or explanations.
+            It is very important that you provide all the possible positive, negative, corner and edge cases/scenarios needed to verify all the execution paths!!!
+            """
     );
 
     private final String modelName;
