@@ -57,9 +57,14 @@ public class Conversation {
     public static void fromUser(ChatMessage message, StreamingResponseHandler handler) {
         HISTORY.add(message);
 
+        String openAiApiKey = Config.openAiApiKey();
+        if (openAiApiKey == null || openAiApiKey.isBlank()) {
+            throw new RuntimeException("Please go to \"File -> Settings -> AID2 Settings\" and specify OpenAI API key");
+        }
+
         OpenAiChatModel model = OpenAiChatModel.builder()
                 .modelName(Config.model())
-                .apiKey(Config.openAiApiKey())
+                .apiKey(openAiApiKey)
                 .temperature(Config.temperature())
                 .timeout(Duration.ofMinutes(10))
                 .build();
@@ -67,7 +72,7 @@ public class Conversation {
         System.out.println("================== OLOLO ==================");
         System.out.println(Config.model());
         System.out.println(Config.temperature());
-        System.out.println(Config.openAiApiKey());
+        System.out.println(openAiApiKey);
         System.out.println(HISTORY.history().size());
 
         ANSWER = new StringBuffer();
