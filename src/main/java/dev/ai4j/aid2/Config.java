@@ -59,26 +59,21 @@ public class Config {
     }
 
     private static final String DEFAULT_EXPLAIN_CODE_PROMPT_TEMPLATE = """
-            Explain:
-            - What the following code does (provide a short summary in 2-4 bullet points)
-            - How it does it (provide the most important implementation details in 3-6 bullet points)
-            - If there is anything unusual/strange/unintuitive about the code, briefly mention it (1-3 bullet points)
+            I have a piece of code that I'm trying to understand.
+            I'm seeing it for the first time.
+            Can you help me analyze this code?
+            I'm particularly interested in:
 
-            Your answer should have the following structure:
-            Summary:
-            - ...
-            - ...
+            - The overall purpose and functionality of the class.
+            - The key methods or functions in the class, including their responsibilities, inputs, outputs, and side effects.
+            - The properties or fields of the class, including their types and when and how they are modified.
+            - Any dependencies the class has on other classes or external libraries.
 
-            Implementation details:
-            - ...
-            - ...
-            - ...
-
-            Notable details:
-            - ...
-
-            Code:
+            Here is the code:
             {{code}}
+
+            Provide your answer as a list of bullet points for each of 4 categories mentioned above.
+            Each bullet point should be concise (max 1 sentence) and easy to understand.
             """;
 
     public static void explainCodePromptTemplate(String value) {
@@ -93,11 +88,12 @@ public class Config {
     }
 
     private static final String DEFAULT_FIND_BUGS_PROMPT_TEMPLATE = """
-            Analyze the following code snippet to identify any logical, syntactic, or semantic errors that prevent the code from functioning as intended.
-            Do not consider design flaws or code smells.
-            If you find any bugs, list them below.
+            I have a piece of code that I'm examining.
+            I strictly need you to identify any existing bugs that would prevent this code from functioning as intended.
+            Please don't consider any improvements, refactorings, or design suggestions.
+            I am solely focused on bugs that would cause incorrect results, unhandled exceptions, crashes, or any similar issues that would disrupt the execution of the code.
 
-            Code:
+            Here is the code:
             {{code}}
             """;
 

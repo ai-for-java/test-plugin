@@ -41,7 +41,7 @@ public abstract class CodeSummarizingAction extends AnAction {
                 String javaCode = javaClassPsiFile.getText();
 
                 long appenderId = System.currentTimeMillis();
-                Aid2ToolWindow.init(appenderId);
+                Aid2ToolWindow.init(appenderId, "AID2:\n");
                 Aid2ToolWindow.open(project);
 
                 codeSummarizer.coverWithComments(javaCode, new StreamingResponseHandler() {

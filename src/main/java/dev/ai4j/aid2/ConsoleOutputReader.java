@@ -19,14 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static dev.ai4j.aid2.Utils.appendStringToTextFile;
-import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
-import static dev.ai4j.aid2.Utils.getVirtualFileFromClass;
-
+import static dev.ai4j.aid2.Utils.*;
 
 public class ConsoleOutputReader implements ConsoleFilterProvider {
 
-    private final AiImplementationFixer aiImplementationFixer = new AiImplementationFixer(GPT_4);
+    private final AiImplementationFixer aiImplementationFixer = new AiImplementationFixer("gpt-4-0613");
 
     private final List<String> lines = new ArrayList<>();
 

@@ -30,17 +30,7 @@ public class Aid2SettingsPanel {
         myPanel.add(apiKeyPanel);
 
 
-        JPanel coverWithCommentsPanel = new JPanel(new BorderLayout());
-        coverWithCommentsPanel.setBorder(new TitledBorder("Cover with Comments Prompt Template"));
-        coverWithCommentsField = new JTextArea(6, 40);
-        coverWithCommentsField.setLineWrap(true);
-        coverWithCommentsField.setWrapStyleWord(true);
-        coverWithCommentsField.setFont(font);
-        JScrollPane coverWithCommentsScrollPane = new JBScrollPane(coverWithCommentsField);
         int margin = 5;
-        coverWithCommentsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
-        coverWithCommentsPanel.add(coverWithCommentsScrollPane, BorderLayout.CENTER);
-        myPanel.add(coverWithCommentsPanel);
 
 
         JPanel explainCodePanel = new JPanel(new BorderLayout());
@@ -53,6 +43,18 @@ public class Aid2SettingsPanel {
         explainCodeScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
         explainCodePanel.add(explainCodeScrollPane, BorderLayout.CENTER);
         myPanel.add(explainCodePanel);
+
+
+        JPanel coverWithCommentsPanel = new JPanel(new BorderLayout());
+        coverWithCommentsPanel.setBorder(new TitledBorder("Cover with Comments Prompt Template"));
+        coverWithCommentsField = new JTextArea(6, 40);
+        coverWithCommentsField.setLineWrap(true);
+        coverWithCommentsField.setWrapStyleWord(true);
+        coverWithCommentsField.setFont(font);
+        JScrollPane coverWithCommentsScrollPane = new JBScrollPane(coverWithCommentsField);
+        coverWithCommentsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
+        coverWithCommentsPanel.add(coverWithCommentsScrollPane, BorderLayout.CENTER);
+        myPanel.add(coverWithCommentsPanel);
 
 
         JPanel findBugsPanel = new JPanel(new BorderLayout());
