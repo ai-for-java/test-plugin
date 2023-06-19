@@ -10,18 +10,12 @@ import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiCodeSummarizer {
 
-    private final String modelName;
-
-    public AiCodeSummarizer(String modelName) {
-        this.modelName = modelName;
-    }
-
     public void coverWithComments(String code, StreamingResponseHandler handler) {
         PromptTemplate template = PromptTemplate.from(Config.explainCodePromptTemplate());
 
         UserMessage message = userMessage(template.format("code", code));
 
-        Conversation.reset(modelName);
+        Conversation.reset();
         Conversation.fromUser(message, handler);
     }
 }

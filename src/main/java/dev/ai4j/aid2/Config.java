@@ -2,14 +2,39 @@ package dev.ai4j.aid2;
 
 import com.intellij.ide.util.PropertiesComponent;
 
+import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class Config {
 
+    private static final String AID2_OPENAI_MODEL = "AID2_OPENAI_MODEL";
+    private static final String AID2_OPENAI_TEMPERATURE = "AID2_OPENAI_TEMPERATURE";
     private static final String AID2_OPENAI_API_KEY = "AID2_OPENAI_API_KEY";
     private static final String AID2_COVER_WITH_COMMENTS_PROMPT_TEMPLATE = "AID2_COVER_WITH_COMMENTS_PROMPT_TEMPLATE";
     private static final String AID2_EXPLAIN_CODE_PROMPT_TEMPLATE = "AID2_EXPLAIN_CODE_PROMPT_TEMPLATE";
     private static final String AID2_FIND_BUGS_PROMPT_TEMPLATE = "AID2_FIND_BUGS_PROMPT_TEMPLATE";
+
+    // Model
+
+    public static String model() {
+        String model = PropertiesComponent.getInstance().getValue(AID2_OPENAI_MODEL);
+        return isBlank(model) ? GPT_4 : model;
+    }
+
+    public static void model(String value) {
+        PropertiesComponent.getInstance().setValue(AID2_OPENAI_MODEL, value);
+    }
+
+    // Temperature
+
+    public static Double temperature() {
+        String temperature = PropertiesComponent.getInstance().getValue(AID2_OPENAI_TEMPERATURE);
+        return isBlank(temperature) ? 0.0 : Double.parseDouble(temperature);
+    }
+
+    public static void temperature(Double value) {
+        PropertiesComponent.getInstance().setValue(AID2_OPENAI_TEMPERATURE, value.toString());
+    }
 
     // OpenAI Key
 

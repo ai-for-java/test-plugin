@@ -10,18 +10,12 @@ import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiCodeCommenter {
 
-    private final String modelName;
-
-    public AiCodeCommenter(String modelName) {
-        this.modelName = modelName;
-    }
-
     public void coverWithComments(String code, StreamingResponseHandler handler) {
         PromptTemplate template = PromptTemplate.from(Config.coverWithCommentsPromptTemplate());
 
         UserMessage message = userMessage(template.format("code", code));
 
-        Conversation.reset(modelName);
+        Conversation.reset();
         Conversation.fromUser(message, handler);
     }
 }

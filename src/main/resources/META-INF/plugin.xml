@@ -150,57 +150,32 @@
         <!--        </action>-->
 
 
-        <action id="CodeSummarizingWithGpt3Action"
-                class="dev.ai4j.aid2.explain.summary.CodeSummarizingWithGpt3Action"
+        <action id="CodeSummarizingAction"
+                class="dev.ai4j.aid2.explain.summary.CodeSummarizingAction"
                 text="Explain Code"
                 description="Explain code"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
         </action>
-        <action id="CodeSummarizingWithGpt4Action"
-                class="dev.ai4j.aid2.explain.summary.CodeSummarizingWithGpt4Action"
-                text="Explain Code (GPT-4)"
-                description="Cover core (GPT-4)"
-                icon="AllIcons.Diff.MagicResolve">
-            <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="CodeSummarizingWithGpt3Action"/>
-        </action>
 
 
-        <action id="CodeCommentingWithGpt3Action"
-                class="dev.ai4j.aid2.explain.comment.CodeCommentingWithGpt3Action"
+        <action id="CodeCommentingAction"
+                class="dev.ai4j.aid2.explain.comment.CodeCommentingAction"
                 text="Cover with Comments"
                 description="Cover with comments"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="CodeSummarizingWithGpt4Action"/>
-        </action>
-        <action id="CodeCommentingWithGpt4Action"
-                class="dev.ai4j.aid2.explain.comment.CodeCommentingWithGpt4Action"
-                text="Cover with Comments (GPT-4)"
-                description="Cover with comments (GPT-4)"
-                icon="AllIcons.Diff.MagicResolve">
-            <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="CodeCommentingWithGpt3Action"/>
+                          anchor="after" relative-to-action="CodeSummarizingAction"/>
         </action>
 
-
-        <action id="FindBugsWithGpt3Action"
-                class="dev.ai4j.aid2.findbugs.FindBugsWithGpt3Action"
+        <action id="FindBugsAction"
+                class="dev.ai4j.aid2.findbugs.FindBugsAction"
                 text="Find Bugs"
                 description="Find bugs"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="CodeCommentingWithGpt4Action"/>
-        </action>
-        <action id="FindBugsWithGpt4Action"
-                class="dev.ai4j.aid2.findbugs.FindBugsWithGpt4Action"
-                text="Find Bugs (GPT-4)"
-                description="Find bugs (GPT-4)"
-                icon="AllIcons.Diff.MagicResolve">
-            <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="after" relative-to-action="FindBugsWithGpt3Action"/>
+                          anchor="after" relative-to-action="CodeCommentingAction"/>
         </action>
 
     </actions>

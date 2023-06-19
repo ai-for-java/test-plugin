@@ -13,23 +13,20 @@ import com.intellij.psi.PsiManager;
 import dev.ai4j.StreamingResponseHandler;
 import dev.ai4j.aid2.ui.error.Errors;
 import dev.ai4j.aid2.ui.window.Aid2ToolWindow;
-import org.jetbrains.annotations.NotNull;
 
-public abstract class CodeSummarizingAction extends AnAction {
+public class CodeSummarizingAction extends AnAction {
 
-    private final AiCodeSummarizer codeSummarizer = new AiCodeSummarizer(getModelName());
-
-    protected abstract String getModelName();
+    private final AiCodeSummarizer codeSummarizer = new AiCodeSummarizer();
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         VirtualFile virtualFile = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
         e.getPresentation().setEnabledAndVisible(virtualFile != null && "java".equals(virtualFile.getExtension()));
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
         VirtualFile javaClassFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
 
@@ -40,15 +37,14 @@ public abstract class CodeSummarizingAction extends AnAction {
                 PsiFile javaClassPsiFile = PsiManager.getInstance(project).findFile(javaClassFile);
                 String javaCode = javaClassPsiFile.getText();
 
-                long appenderId = System.currentTimeMillis();
-                Aid2ToolWindow.init(appenderId, "AID2:\n");
+                Aid2ToolWindow.reset("[ AID2 ]\n");
                 Aid2ToolWindow.open(project);
 
                 codeSummarizer.coverWithComments(javaCode, new StreamingResponseHandler() {
                     @Override
                     public void onPartialResponse(String partialResponse) {
                         WriteCommandAction.runWriteCommandAction(project, () -> {
-                            Aid2ToolWindow.appendText(appenderId, partialResponse);
+                            Aid2ToolWindow.appendText(partialResponse);
                         });
                     }
 

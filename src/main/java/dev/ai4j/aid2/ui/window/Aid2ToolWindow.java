@@ -13,14 +13,11 @@ import dev.ai4j.aid2.ui.error.Errors;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.ai4j.chat.UserMessage.userMessage;
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 
 public class Aid2ToolWindow implements ToolWindowFactory {
-
-    private static final AtomicLong latestAppender = new AtomicLong();
 
     private Project project;
 
@@ -40,21 +37,26 @@ public class Aid2ToolWindow implements ToolWindowFactory {
 
         textField = new JTextField();
         textField.addActionListener(e -> {
-            handleInput(textField.getText());
+            handle(textField.getText());
             textField.setText("");
         });
 
         JButton verifyButton = new JButton("Are you sure?");
-        verifyButton.addActionListener(e -> handleInput("Are you sure?"));
+        verifyButton.addActionListener(e -> handle("Are you sure?"));
 
-        JButton resetButton = new JButton("Reset Conversation");
+        JButton stopButton = new JButton("Stop");
+        stopButton.addActionListener(e -> {
+            Conversation.stopIfStreaming();
+        });
+
+        JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> {
-            Conversation.reset(GPT_4); // TODO make configurable
-            init(System.currentTimeMillis(), "");
+            reset("");
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(verifyButton);
+        buttonPanel.add(stopButton);
         buttonPanel.add(resetButton);
 
         JPanel inputPanel = new JPanel(new BorderLayout());
@@ -70,15 +72,15 @@ public class Aid2ToolWindow implements ToolWindowFactory {
         toolWindow.getContentManager().addContent(content);
     }
 
-    public static void appendText(long appenderId, String text) {
-        if (latestAppender.get() == appenderId && textArea != null) {
+    public static void appendText(String text) {
+        if (textArea != null) {
             textArea.append(text);
             textArea.setCaretPosition(textArea.getDocument().getLength());
         }
     }
 
-    public static void init(long appenderId, String text) {
-        latestAppender.set(appenderId);
+    public static void reset(String text) {
+        Conversation.reset();
         if (textArea != null) {
             textArea.setText(text);
         }
@@ -94,19 +96,28 @@ public class Aid2ToolWindow implements ToolWindowFactory {
         }
     }
 
-    private void handleInput(String input) {
+    private void handle(String userMessage) {
+
+        Conversation.stopIfStreaming();
 
         if (!textArea.getText().isEmpty()) {
-            appendText(latestAppender.get(), "\n\n\n");
+            appendText("\n\n\n");
         }
 
-        appendText(latestAppender.get(), "User:\n" + input + "\n\n\nAID2:\n");
+        appendText("[ User ]\n" + userMessage);
 
-        Conversation.fromUser(userMessage(input), new StreamingResponseHandler() {
+        Conversation.fromUser(userMessage(userMessage), new StreamingResponseHandler() {
+
+            private final AtomicBoolean streamingStarted = new AtomicBoolean(false);
 
             @Override
             public void onPartialResponse(String partialResponse) {
-                appendText(latestAppender.get(), partialResponse);
+                if (!streamingStarted.get()) {
+                    streamingStarted.set(true);
+                    appendText("\n\n\n[ AID2 ]\n");
+                }
+
+                appendText(partialResponse);
             }
 
             @Override

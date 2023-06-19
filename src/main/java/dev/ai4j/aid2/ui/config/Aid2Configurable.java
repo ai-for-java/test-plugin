@@ -29,6 +29,8 @@ public class Aid2Configurable implements Configurable {
 
     @Override
     public void apply() {
+        Config.model(settingsPanel.getModel());
+        Config.temperature(settingsPanel.getTemperature());
         Config.openAiApiKey(settingsPanel.getOpenAiApiKey());
         Config.coverWithCommentsPromptTemplate(settingsPanel.getCoverWithCommentsPromptTemplate());
         Config.explainCodePromptTemplate(settingsPanel.getExplainCodePromptTemplate());
@@ -37,6 +39,8 @@ public class Aid2Configurable implements Configurable {
 
     @Override
     public void reset() {
+        settingsPanel.setModel(Config.model());
+        settingsPanel.setTemperature(Config.temperature());
         settingsPanel.setOpenAiApiKey(Config.openAiApiKey());
         settingsPanel.setCoverWithCommentsPromptTemplate(Config.coverWithCommentsPromptTemplate());
         settingsPanel.setExplainCodePromptTemplate(Config.explainCodePromptTemplate());

@@ -14,11 +14,9 @@ import dev.ai4j.aid2.ui.error.Errors;
 import dev.ai4j.aid2.ui.window.Aid2ToolWindow;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CodeCommentingAction extends AnAction {
+public class CodeCommentingAction extends AnAction {
 
-    private final AiCodeCommenter codeCommenter = new AiCodeCommenter(getModelName());
-
-    protected abstract String getModelName();
+    private final AiCodeCommenter codeCommenter = new AiCodeCommenter();
 
     @Override
     public void update(@NotNull AnActionEvent e) {
@@ -28,26 +26,24 @@ public abstract class CodeCommentingAction extends AnAction {
     }
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
         VirtualFile javaClassFile = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
 
         try {
             ApplicationManager.getApplication().runReadAction(() -> {
 
-                // needs read action
                 PsiFile javaClassPsiFile = PsiManager.getInstance(project).findFile(javaClassFile);
                 String javaCode = javaClassPsiFile.getText();
 
-                long appenderId = System.currentTimeMillis();
-                Aid2ToolWindow.init(appenderId, "AID2:\n");
+                Aid2ToolWindow.reset("[ AID2 ]\n");
                 Aid2ToolWindow.open(project);
 
                 codeCommenter.coverWithComments(javaCode, new StreamingResponseHandler() {
 
                     @Override
                     public void onPartialResponse(String partialResponse) {
-                        Aid2ToolWindow.appendText(appenderId, partialResponse);
+                        Aid2ToolWindow.appendText(partialResponse);
                     }
 
                     @Override
