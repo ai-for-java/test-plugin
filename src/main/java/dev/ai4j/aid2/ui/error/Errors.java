@@ -4,6 +4,9 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.openapi.project.Project;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import static com.intellij.notification.NotificationType.ERROR;
 
 public class Errors {
@@ -12,6 +15,9 @@ public class Errors {
             .getNotificationGroup("Error Notification Group");
 
     public static void showNotification(Throwable t, Project project) {
-        notificationGroup.createNotification("Ooops", t.getLocalizedMessage(), ERROR).notify(project);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        t.printStackTrace(pw);
+        notificationGroup.createNotification("Ooops", sw.toString(), ERROR).notify(project);
     }
 }

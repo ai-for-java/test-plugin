@@ -8,13 +8,10 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
-
 public class Aid2SettingsPanel {
 
-    private static final String[] MODELS = {GPT_4, GPT_3_5_TURBO, "gpt-3.5-turbo-16k"};
-    private static final Double[] TEMPERATURES = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+    private static final String[] MODELS = {"gpt-4-0613", "gpt-3.5-turbo-0613"};
+    private static final Double[] TEMPERATURES = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0};
 
     private final JPanel myPanel;
     private final JComboBox<String> modelDropdown;

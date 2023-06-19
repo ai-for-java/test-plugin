@@ -41,8 +41,8 @@ public class Aid2ToolWindow implements ToolWindowFactory {
             textField.setText("");
         });
 
-        JButton verifyButton = new JButton("Are you sure?");
-        verifyButton.addActionListener(e -> handle("Are you sure?"));
+        JButton verifyButton = new JButton("Self-Verify");
+        verifyButton.addActionListener(e -> handle("Verify your answer for correctness."));
 
         JButton stopButton = new JButton("Stop");
         stopButton.addActionListener(e -> {

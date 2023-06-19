@@ -2,7 +2,6 @@ package dev.ai4j.aid2;
 
 import com.intellij.ide.util.PropertiesComponent;
 
-import static dev.ai4j.model.openai.OpenAiModelName.GPT_4;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class Config {
@@ -19,7 +18,7 @@ public class Config {
 
     public static String model() {
         String model = PropertiesComponent.getInstance().getValue(AID2_OPENAI_MODEL);
-        return isBlank(model) ? GPT_4 : model;
+        return isBlank(model) ? "gpt-4-0613" : model;
     }
 
     public static void model(String value) {
