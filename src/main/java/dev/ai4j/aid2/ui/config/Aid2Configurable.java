@@ -32,9 +32,10 @@ public class Aid2Configurable implements Configurable {
         Config.model(settingsPanel.getModel());
         Config.temperature(settingsPanel.getTemperature());
         Config.openAiApiKey(settingsPanel.getOpenAiApiKey());
-        Config.coverWithCommentsPromptTemplate(settingsPanel.getCoverWithCommentsPromptTemplate());
         Config.explainCodePromptTemplate(settingsPanel.getExplainCodePromptTemplate());
+        Config.coverWithCommentsPromptTemplate(settingsPanel.getCoverWithCommentsPromptTemplate());
         Config.findBugsPromptTemplate(settingsPanel.getFindBugsPromptTemplate());
+        Config.suggestImprovementsPromptTemplate(settingsPanel.getSuggestImprovementsPromptTemplate());
     }
 
     @Override
@@ -42,8 +43,9 @@ public class Aid2Configurable implements Configurable {
         settingsPanel.setModel(Config.model());
         settingsPanel.setTemperature(Config.temperature());
         settingsPanel.setOpenAiApiKey(Config.openAiApiKey());
-        settingsPanel.setCoverWithCommentsPromptTemplate(Config.coverWithCommentsPromptTemplate());
         settingsPanel.setExplainCodePromptTemplate(Config.explainCodePromptTemplate());
+        settingsPanel.setCoverWithCommentsPromptTemplate(Config.coverWithCommentsPromptTemplate());
         settingsPanel.setFindBugsPromptTemplate(Config.findBugsPromptTemplate());
+        settingsPanel.setSuggestImprovementsPromptTemplate(Config.suggestImprovementsPromptTemplate());
     }
 }

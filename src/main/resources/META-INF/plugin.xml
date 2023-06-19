@@ -152,8 +152,8 @@
 
         <action id="CodeSummarizingAction"
                 class="dev.ai4j.aid2.explain.summary.CodeSummarizingAction"
-                text="Explain Code"
-                description="Explain code"
+                text="Explain"
+                description="Explain"
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
@@ -176,6 +176,15 @@
                 icon="AllIcons.Diff.MagicResolve">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="after" relative-to-action="CodeCommentingAction"/>
+        </action>
+
+        <action id="SuggestImprovementsAction"
+                class="dev.ai4j.aid2.suggestimprovements.SuggestImprovementsAction"
+                text="Suggest Improvements"
+                description="Suggest improvements"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="FindBugsAction"/>
         </action>
 
     </actions>

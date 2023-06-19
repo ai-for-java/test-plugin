@@ -23,6 +23,7 @@ public class Aid2SettingsPanel {
     private final JTextArea coverWithCommentsField;
     private final JTextArea explainCodeField;
     private final JTextArea findBugsField;
+    private final JTextArea suggestImprovementsField;
 
     public Aid2SettingsPanel() {
         myPanel = new JPanel();
@@ -55,7 +56,7 @@ public class Aid2SettingsPanel {
 
 
         JPanel explainCodePanel = new JPanel(new BorderLayout());
-        explainCodePanel.setBorder(new TitledBorder("Explain Code Prompt Template"));
+        explainCodePanel.setBorder(new TitledBorder("Explain Prompt Template"));
         explainCodeField = new JTextArea(6, 40);
         explainCodeField.setLineWrap(true);
         explainCodeField.setWrapStyleWord(true);
@@ -88,10 +89,38 @@ public class Aid2SettingsPanel {
         findBugsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
         findBugsPanel.add(findBugsScrollPane, BorderLayout.CENTER);
         myPanel.add(findBugsPanel);
+
+
+        JPanel suggestImprovementsPanel = new JPanel(new BorderLayout());
+        suggestImprovementsPanel.setBorder(new TitledBorder("Suggest Improvements Prompt Template"));
+        suggestImprovementsField = new JTextArea(6, 40);
+        suggestImprovementsField.setLineWrap(true);
+        suggestImprovementsField.setWrapStyleWord(true);
+        suggestImprovementsField.setFont(font);
+        JScrollPane suggestImprovementsScrollPane = new JBScrollPane(suggestImprovementsField);
+        suggestImprovementsScrollPane.setBorder(JBUI.Borders.empty(margin, margin, margin, margin));
+        suggestImprovementsPanel.add(suggestImprovementsScrollPane, BorderLayout.CENTER);
+        myPanel.add(suggestImprovementsPanel);
     }
 
     public JPanel getPanel() {
         return myPanel;
+    }
+
+    public String getModel() {
+        return (String) modelDropdown.getSelectedItem();
+    }
+
+    public void setModel(String model) {
+        modelDropdown.setSelectedItem(model);
+    }
+
+    public Double getTemperature() {
+        return (Double) temperatureDropdown.getSelectedItem();
+    }
+
+    public void setTemperature(Double temperature) {
+        temperatureDropdown.setSelectedItem(temperature);
     }
 
     public String getOpenAiApiKey() {
@@ -126,19 +155,11 @@ public class Aid2SettingsPanel {
         findBugsField.setText(template);
     }
 
-    public String getModel() {
-        return (String) modelDropdown.getSelectedItem();
+    public String getSuggestImprovementsPromptTemplate() {
+        return suggestImprovementsField.getText();
     }
 
-    public void setModel(String model) {
-        modelDropdown.setSelectedItem(model);
-    }
-
-    public Double getTemperature() {
-        return (Double) temperatureDropdown.getSelectedItem();
-    }
-
-    public void setTemperature(Double temperature) {
-        temperatureDropdown.setSelectedItem(temperature);
+    public void setSuggestImprovementsPromptTemplate(String template) {
+        suggestImprovementsField.setText(template);
     }
 }

@@ -13,6 +13,7 @@ public class Config {
     private static final String AID2_COVER_WITH_COMMENTS_PROMPT_TEMPLATE = "AID2_COVER_WITH_COMMENTS_PROMPT_TEMPLATE";
     private static final String AID2_EXPLAIN_CODE_PROMPT_TEMPLATE = "AID2_EXPLAIN_CODE_PROMPT_TEMPLATE";
     private static final String AID2_FIND_BUGS_PROMPT_TEMPLATE = "AID2_FIND_BUGS_PROMPT_TEMPLATE";
+    private static final String AID2_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE = "AID2_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE";
 
     // Model
 
@@ -76,7 +77,7 @@ public class Config {
         PropertiesComponent.getInstance().setValue(AID2_COVER_WITH_COMMENTS_PROMPT_TEMPLATE, value);
     }
 
-    // explain code
+    // explain
 
     public static String explainCodePromptTemplate() {
         String template = PropertiesComponent.getInstance().getValue(AID2_EXPLAIN_CODE_PROMPT_TEMPLATE);
@@ -124,5 +125,25 @@ public class Config {
 
     public static void findBugsPromptTemplate(String value) {
         PropertiesComponent.getInstance().setValue(AID2_FIND_BUGS_PROMPT_TEMPLATE, value);
+    }
+
+    // suggest improvements
+
+    public static String suggestImprovementsPromptTemplate() {
+        String template = PropertiesComponent.getInstance().getValue(AID2_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE);
+        return isBlank(template) ? DEFAULT_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE : template;
+    }
+
+    private static final String DEFAULT_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE = """
+            I have a piece of code that I'm examining.
+            I would like you to analyze this code for any potential design issues or code smells, and suggest a list of improvements, explaining why each improvement is important.
+            Please prioritize the list of improvements from most critical to least critical.
+
+            Here is the code:
+            {{code}}
+            """;
+
+    public static void suggestImprovementsPromptTemplate(String value) {
+        PropertiesComponent.getInstance().setValue(AID2_SUGGEST_IMPROVEMENTS_PROMPT_TEMPLATE, value);
     }
 }
