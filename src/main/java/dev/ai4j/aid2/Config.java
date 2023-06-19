@@ -18,7 +18,7 @@ public class Config {
 
     public static String model() {
         String model = PropertiesComponent.getInstance().getValue(AID2_OPENAI_MODEL);
-        return isBlank(model) ? "gpt-4-0613" : model;
+        return isBlank(model) ? "gpt-4" : model;
     }
 
     public static void model(String value) {
@@ -90,15 +90,15 @@ public class Config {
             I'm particularly interested in:
 
             - The overall purpose and functionality of the class.
-            - The key methods or functions in the class, including their responsibilities, inputs, outputs, and side effects.
-            - The properties or fields of the class, including their types and when and how they are modified.
-            - Any dependencies the class has on other classes or external libraries.
+            - The key methods and constructors in the class, including their responsibilities, inputs, outputs, and side effects.
+            - The fields of the class, including their types and when and how they are modified.
+            - Dependencies the class has on other classes or external libraries.
 
             Here is the code:
             {{code}}
 
             Provide your answer as a list of bullet points for each of 4 categories mentioned above.
-            Each bullet point should be concise (max 1 sentence) and easy to understand.
+            Each bullet point should be concise (max 2 sentences) and easy to understand.
             """;
 
     public static void explainCodePromptTemplate(String value) {

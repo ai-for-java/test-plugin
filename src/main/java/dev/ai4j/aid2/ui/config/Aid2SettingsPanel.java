@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class Aid2SettingsPanel {
 
-    private static final String[] MODELS = {"gpt-4-0613", "gpt-3.5-turbo-0613"};
+    private static final String[] MODELS = {"gpt-4-0613", "gpt-4", "gpt-3.5-turbo-0613", "gpt-3.5-turbo"};
     private static final Double[] TEMPERATURES = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0};
 
     private final JPanel myPanel;
