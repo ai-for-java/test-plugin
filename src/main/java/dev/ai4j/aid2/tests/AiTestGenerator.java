@@ -2,16 +2,12 @@ package dev.ai4j.aid2.tests;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
-import dev.ai4j.aid2.Config;
-import dev.ai4j.chat.ChatMessage;
-import dev.ai4j.model.chat.OpenAiChatModel;
+import dev.ai4j.aid2.Conversation;
+import dev.ai4j.chat.UserMessage;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiTestGenerator {
@@ -24,29 +20,14 @@ public class AiTestGenerator {
                     "Use the following structure for test method names: given_[starting conditions]__when_[action]__then_[expected result]"
     );
 
-    private final String modelName;
-
-    public AiTestGenerator(String modelName) {
-        this.modelName = modelName;
-    }
-
     public void generateTestClassContents(String spec, String testCases, String testClassName, StreamingResponseHandler modelResponseHandler) {
-        OpenAiChatModel model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(Config.openAiApiKey())
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        UserMessage message = userMessage(CREATE_TEST_CLASS_PROMPT_TEMPLATE.format(Map.of(
+                "spec", Matcher.quoteReplacement(spec),
+                "test_cases", Matcher.quoteReplacement(testCases), // TODO move to ai4j?
+                "test_class_name", testClassName
+        )));
 
-        List<ChatMessage> messages = List.of(
-                systemMessage("You are a professional software tester."), // TODO try without?
-                userMessage(CREATE_TEST_CLASS_PROMPT_TEMPLATE.format(Map.of(
-                        "spec", spec,
-                        "test_cases", Matcher.quoteReplacement(testCases), // TODO move to ai4j?
-                        "test_class_name", testClassName
-                )))
-        );
-
-        model.chat(messages, modelResponseHandler);
+        Conversation.reset();
+        Conversation.fromUser(message, modelResponseHandler);
     }
 }

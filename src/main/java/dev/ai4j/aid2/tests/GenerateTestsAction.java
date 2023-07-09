@@ -28,11 +28,9 @@ import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 import static dev.ai4j.aid2.testcases.GenerateTestCasesAction.TESTCASES;
 import static dev.ai4j.aid2.testcases.GenerateTestCasesAction.TXT;
 
-public abstract class GenerateTestsAction extends AnAction {
+public class GenerateTestsAction extends AnAction {
 
-    private final AiTestGenerator aiTestGenerator = new AiTestGenerator(getModelName()); // TODO memory leak
-
-    protected abstract String getModelName();
+    private final AiTestGenerator aiTestGenerator = new AiTestGenerator(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {

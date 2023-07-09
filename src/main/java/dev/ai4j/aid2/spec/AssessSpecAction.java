@@ -22,11 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import static dev.ai4j.aid2.Utils.appendStringToTextFile;
 import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 
-public abstract class AssessSpecAction extends AnAction {
+public class AssessSpecAction extends AnAction {
 
-    private final AiSpecAssesser aiSpecAssesser = new AiSpecAssesser(getModelName()); // TODO memory leak
-
-    protected abstract String getModelName();
+    private final AiSpecAssesser aiSpecAssesser = new AiSpecAssesser(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {

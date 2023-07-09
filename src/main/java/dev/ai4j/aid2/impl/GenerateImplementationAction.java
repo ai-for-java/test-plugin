@@ -24,11 +24,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dev.ai4j.aid2.Utils.appendStringToTextFile;
 import static dev.ai4j.aid2.Utils.createFileAndShiftExistingFilesIfAny;
 
-public abstract class GenerateImplementationAction extends AnAction {
+public class GenerateImplementationAction extends AnAction {
 
-    private final AiImplementationGenerator aiImplementationGenerator = new AiImplementationGenerator(getModelName()); // TODO memory leak
-
-    protected abstract String getModelName();
+    private final AiImplementationGenerator aiImplementationGenerator = new AiImplementationGenerator(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {

@@ -20,14 +20,12 @@ import dev.ai4j.aid2.Utils;
 import dev.ai4j.aid2.ui.error.Errors;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class GenerateTestCasesAction extends AnAction {
+public class GenerateTestCasesAction extends AnAction {
 
     public static final String TESTCASES = ".testcases";
     public static final String TXT = ".txt";
 
-    private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(getModelName()); // TODO memory leak
-
-    protected abstract String getModelName();
+    private final AiTestCaseGenerator aiTestCaseGenerator = new AiTestCaseGenerator(); // TODO memory leak
 
     @Override
     public void update(@NotNull AnActionEvent e) {

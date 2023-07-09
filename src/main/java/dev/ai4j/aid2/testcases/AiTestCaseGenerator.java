@@ -2,13 +2,11 @@ package dev.ai4j.aid2.testcases;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
-import dev.ai4j.aid2.Config;
-import dev.ai4j.chat.ChatMessage;
-import dev.ai4j.model.chat.OpenAiChatModel;
+import dev.ai4j.aid2.Conversation;
+import dev.ai4j.chat.UserMessage;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import static dev.ai4j.chat.UserMessage.userMessage;
 
@@ -29,27 +27,13 @@ public class AiTestCaseGenerator {
                     "It is very important that each detail and requirement in specification is taken into account."
     );
 
-    private final String modelName;
-
-    public AiTestCaseGenerator(String modelName) {
-        this.modelName = modelName;
-    }
-
     public void generateTestCases(String spec, String implClassName, StreamingResponseHandler modelResponseHandler) {
-        OpenAiChatModel model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(Config.openAiApiKey())
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
+        UserMessage message = userMessage(CREATE_TEST_CASES_PROMPT_TEMPLATE.format(Map.of(
+                "impl_class_name", implClassName,
+                "spec", Matcher.quoteReplacement(spec) // TODO escape
+        )));
 
-        List<ChatMessage> messages = List.of(
-                userMessage(CREATE_TEST_CASES_PROMPT_TEMPLATE.format(Map.of(
-                        "impl_class_name", implClassName,
-                        "spec", spec
-                )))
-        );
-
-        model.chat(messages, modelResponseHandler);
+        Conversation.reset();
+        Conversation.fromUser(message, modelResponseHandler);
     }
 }

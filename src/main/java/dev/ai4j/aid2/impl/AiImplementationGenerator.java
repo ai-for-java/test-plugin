@@ -2,16 +2,12 @@ package dev.ai4j.aid2.impl;
 
 import dev.ai4j.PromptTemplate;
 import dev.ai4j.StreamingResponseHandler;
-import dev.ai4j.aid2.Config;
-import dev.ai4j.chat.ChatMessage;
-import dev.ai4j.model.chat.OpenAiChatModel;
+import dev.ai4j.aid2.Conversation;
+import dev.ai4j.chat.UserMessage;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static dev.ai4j.chat.SystemMessage.systemMessage;
 import static dev.ai4j.chat.UserMessage.userMessage;
 
 public class AiImplementationGenerator {
@@ -25,29 +21,16 @@ public class AiImplementationGenerator {
                     "It is very important that the implementation satisfies the following test cases delimited by triple square brackets [[[{{test_class_contents}}]]]."
     );
 
-    private final String modelName;
-
-    public AiImplementationGenerator(String modelName) {
-        this.modelName = modelName;
-    }
 
     public void generateImplementationClassContents(String spec, String testClassContents, String implClassName, StreamingResponseHandler modelResponseHandler) {
-        OpenAiChatModel model = OpenAiChatModel.builder()
-                .modelName(modelName)
-                .apiKey(Config.openAiApiKey())
-                .temperature(0.0)
-                .timeout(Duration.ofMinutes(10))
-                .build();
 
-        List<ChatMessage> messages = List.of(
-                systemMessage("You are a professional Java coder."),
-                userMessage(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
-                        "impl_class_name", implClassName,
-                        "spec", spec,
-                        "test_class_contents", Matcher.quoteReplacement(testClassContents)
-                )))
-        );
+        UserMessage message = userMessage(CREATE_IMPL_CLASS_PROMPT_TEMPLATE.format(Map.of(
+                "impl_class_name", implClassName,
+                "spec", Matcher.quoteReplacement(spec),
+                "test_class_contents", Matcher.quoteReplacement(testClassContents)
+        )));
 
-        model.chat(messages, modelResponseHandler);
+        Conversation.reset();
+        Conversation.fromUser(message, modelResponseHandler);
     }
 }

@@ -149,6 +149,41 @@
         <!--                          anchor="after" relative-to-action="CoverExistingClassWithTestsWithGpt3Action"/>-->
         <!--        </action>-->
 
+        <action id="AssessSpecAction"
+                class="dev.ai4j.aid2.spec.AssessSpecAction"
+                text="Assess"
+                description="Assess"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
+        </action>
+
+        <action id="GenerateTestCasesAction"
+                class="dev.ai4j.aid2.testcases.GenerateTestCasesAction"
+                text="Generate Test Cases"
+                description="Generate test cases"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="AssessSpecAction"/>
+        </action>
+
+        <action id="GenerateTestsAction"
+                class="dev.ai4j.aid2.tests.GenerateTestsAction"
+                text="Generate Tests"
+                description="Generate tests"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestCasesAction"/>
+        </action>
+
+        <action id="GenerateImplementationAction"
+                class="dev.ai4j.aid2.impl.GenerateImplementationAction"
+                text="Generate Implementation"
+                description="Generate implementation"
+                icon="AllIcons.Diff.MagicResolve">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="after" relative-to-action="GenerateTestsAction"/>
+        </action>
 
         <action id="CodeSummarizingAction"
                 class="dev.ai4j.aid2.explain.summary.CodeSummarizingAction"
@@ -158,7 +193,6 @@
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
         </action>
-
 
         <action id="CodeCommentingAction"
                 class="dev.ai4j.aid2.explain.comment.CodeCommentingAction"
